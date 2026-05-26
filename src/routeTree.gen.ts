@@ -17,6 +17,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
 import { Route as DashboardOutreachRouteImport } from './routes/dashboard.outreach'
+import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missions'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
 
@@ -60,6 +61,11 @@ const DashboardOutreachRoute = DashboardOutreachRouteImport.update({
   path: '/outreach',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardMissionsRoute = DashboardMissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPlansNewRoute = DashboardPlansNewRouteImport.update({
   id: '/plans/new',
   path: '/plans/new',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/missions': typeof DashboardMissionsRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/missions': typeof DashboardMissionsRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/missions': typeof DashboardMissionsRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/reset-password'
+    | '/dashboard/missions'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/dashboard/missions'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/reset-password'
+    | '/dashboard/missions'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -210,6 +222,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardOutreachRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/missions': {
+      id: '/dashboard/missions'
+      path: '/missions'
+      fullPath: '/dashboard/missions'
+      preLoaderRoute: typeof DashboardMissionsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/plans/new': {
       id: '/dashboard/plans/new'
       path: '/plans/new'
@@ -228,6 +247,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardMissionsRoute: typeof DashboardMissionsRoute
   DashboardOutreachRoute: typeof DashboardOutreachRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
@@ -237,6 +257,7 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardMissionsRoute: DashboardMissionsRoute,
   DashboardOutreachRoute: DashboardOutreachRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
