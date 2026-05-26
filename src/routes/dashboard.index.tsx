@@ -56,32 +56,34 @@ function DashboardHome() {
   const done = missions.filter((m) => m.completed).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Greeting */}
-      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="text-xs uppercase tracking-widest text-white/40">Today</div>
-        <h1 className="mt-1 text-2xl font-bold md:text-3xl">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.2, 0.7, 0.2, 1] }}>
+        <div className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/40">Today · {new Date().toLocaleDateString(undefined, { weekday: "long", month: "short", day: "numeric" })}</div>
+        <h1 className="mt-2 text-3xl font-bold leading-tight tracking-tight md:text-4xl">
           Hey {name}, <span className="text-gradient">let's ship</span>.
         </h1>
-        <p className="mt-1 text-sm text-white/60">Small moves, every day. That's how income compounds.</p>
+        <p className="mt-2 max-w-xl text-sm text-white/55 md:text-base">Small moves, every day. That's how income compounds.</p>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid gap-3 md:grid-cols-3">
-        <Stat icon={Flame} label="Streak" value={`${streak.current_streak}d`} grad="from-[#5B8CFF] to-[#22C55E]" />
-        <Stat icon={CheckCircle2} label="Tasks completed" value={String(streak.tasks_completed)} grad="from-[#8B5CF6] to-[#5B8CFF]" />
-        <Stat icon={TrendingUp} label="Active plans" value={String(plans.length)} grad="from-[#8B5CF6] to-[#C084FC]" />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Stat icon={Flame} label="Streak" value={`${streak.current_streak}d`} grad="from-[#5B8CFF] to-[#22C55E]" delay={0} />
+        <Stat icon={CheckCircle2} label="Tasks completed" value={String(streak.tasks_completed)} grad="from-[#8B5CF6] to-[#5B8CFF]" delay={0.05} />
+        <Stat icon={TrendingUp} label="Active plans" value={String(plans.length)} grad="from-[#8B5CF6] to-[#E879F9]" delay={0.1} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Missions */}
-        <GlassCard className="lg:col-span-2">
-          <div className="mb-4 flex items-center justify-between">
+        <GlassCard hover className="lg:col-span-2">
+          <div className="mb-5 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-[#5B8CFF]" />
-              <h2 className="font-semibold">Today's missions</h2>
+              <div className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-[#5B8CFF]/25 to-[#8B5CF6]/15 ring-1 ring-inset ring-white/10">
+                <Target className="h-4 w-4 text-[#7FA8FF]" />
+              </div>
+              <h2 className="text-base font-semibold tracking-tight">Today's missions</h2>
             </div>
-            <div className="text-xs text-white/50">{done}/{missions.length} done</div>
+            <div className="rounded-full bg-white/5 px-2.5 py-1 text-[11px] font-medium text-white/60">{done}/{missions.length} done</div>
           </div>
           {missions.length === 0 ? (
             <EmptyState
@@ -90,10 +92,10 @@ function DashboardHome() {
               cta={<Link to="/dashboard/plans/new"><GlowButton>Generate plan <ArrowRight className="h-3.5 w-3.5" /></GlowButton></Link>}
             />
           ) : (
-            <ul className="space-y-2">
+            <ul className="space-y-1">
               {missions.map((m) => (
                 <li key={m.id}>
-                  <label className="group flex cursor-pointer items-start gap-3 rounded-xl p-2 hover:bg-white/5">
+                  <label className="group flex cursor-pointer items-start gap-3 rounded-xl p-2.5 transition-colors hover:bg-white/[0.04]">
                     <input
                       type="checkbox"
                       checked={m.completed}
@@ -111,23 +113,29 @@ function DashboardHome() {
         </GlassCard>
 
         {/* AI panel */}
-        <GlassCard>
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-[#8B5CF6]" />
-            <h2 className="font-semibold">Angie AI</h2>
+        <GlassCard hover className="relative overflow-hidden ring-gradient">
+          <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-[#8B5CF6]/30 blur-3xl" />
+          <div className="relative flex items-center gap-2">
+            <div className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-[#8B5CF6] to-[#5B8CFF] shadow-[0_0_24px_-4px_rgba(139,92,246,0.7)]">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <h2 className="text-base font-semibold tracking-tight">Angie AI</h2>
           </div>
-          <p className="mt-3 text-sm text-white/70">
+          <p className="relative mt-3 text-sm leading-relaxed text-white/65">
             Ready to build a tailored income plan in under 2 minutes.
           </p>
-          <Link to="/dashboard/plans/new" className="mt-4 block">
+          <Link to="/dashboard/plans/new" className="relative mt-5 block">
             <GlowButton className="w-full">New income plan <ArrowRight className="h-3.5 w-3.5" /></GlowButton>
           </Link>
         </GlassCard>
       </div>
 
       {/* Recent plans */}
-      <GlassCard>
-        <h2 className="mb-3 font-semibold">Recent plans</h2>
+      <GlassCard hover>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-base font-semibold tracking-tight">Recent plans</h2>
+          <Link to="/dashboard/plans/new" className="text-xs text-white/50 transition-colors hover:text-white">+ New</Link>
+        </div>
         {plans.length === 0 ? (
           <div className="text-sm text-white/50">No plans yet. Generate your first one.</div>
         ) : (
@@ -137,10 +145,10 @@ function DashboardHome() {
                 <Link
                   to="/dashboard/plans/$planId"
                   params={{ planId: p.id }}
-                  className="flex items-center justify-between py-3 text-sm hover:text-[#5B8CFF]"
+                  className="group flex items-center justify-between gap-3 py-3 text-sm transition-colors hover:text-[#A78BFA]"
                 >
-                  <span>{p.title}</span>
-                  <span className="text-xs text-white/40">{new Date(p.created_at).toLocaleDateString()}</span>
+                  <span className="truncate">{p.title}</span>
+                  <span className="shrink-0 text-xs text-white/40">{new Date(p.created_at).toLocaleDateString()}</span>
                 </Link>
               </li>
             ))}
@@ -151,25 +159,28 @@ function DashboardHome() {
   );
 }
 
-function Stat({ icon: Icon, label, value, grad }: { icon: typeof Flame; label: string; value: string; grad: string }) {
+function Stat({ icon: Icon, label, value, grad, delay }: { icon: typeof Flame; label: string; value: string; grad: string; delay: number }) {
   return (
-    <GlassCard className="p-4">
-      <div className="flex items-center gap-2 text-xs text-white/50">
-        <Icon className="h-3.5 w-3.5" /> {label}
-      </div>
-      <div className={`mt-1 bg-gradient-to-r ${grad} bg-clip-text text-3xl font-bold text-transparent`}>{value}</div>
-    </GlassCard>
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay, duration: 0.4 }}>
+      <GlassCard hover className="relative overflow-hidden p-5">
+        <div className={`pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-gradient-to-br ${grad} opacity-20 blur-2xl`} />
+        <div className="relative flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-white/50">
+          <Icon className="h-3.5 w-3.5" /> {label}
+        </div>
+        <div className={`relative mt-2 bg-gradient-to-r ${grad} bg-clip-text text-4xl font-bold tracking-tight text-transparent`}>{value}</div>
+      </GlassCard>
+    </motion.div>
   );
 }
 
 function EmptyState({ title, desc, cta }: { title: string; desc: string; cta?: React.ReactNode }) {
   return (
-    <div className="flex flex-col items-center gap-3 py-8 text-center">
-      <div className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-[#5B8CFF]/20 to-[#8B5CF6]/20">
-        <Sparkles className="h-5 w-5 text-[#8B5CF6]" />
+    <div className="flex flex-col items-center gap-3 py-10 text-center">
+      <div className="grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-[#5B8CFF]/25 to-[#8B5CF6]/25 ring-1 ring-inset ring-white/10">
+        <Sparkles className="h-5 w-5 text-[#A78BFA]" />
       </div>
       <div className="text-sm font-medium">{title}</div>
-      <div className="text-xs text-white/50">{desc}</div>
+      <div className="max-w-xs text-xs text-white/50">{desc}</div>
       {cta}
     </div>
   );

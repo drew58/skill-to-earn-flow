@@ -121,6 +121,42 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_opportunities: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          opportunity_id: string
+          payout: string | null
+          platform: string
+          title: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          opportunity_id: string
+          payout?: string | null
+          platform: string
+          title: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          opportunity_id?: string
+          payout?: string | null
+          platform?: string
+          title?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       streaks: {
         Row: {
           current_streak: number
