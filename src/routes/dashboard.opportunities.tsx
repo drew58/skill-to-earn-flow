@@ -7,7 +7,7 @@ import {
   TrendingUp, Zap, Globe2, Building2, ShoppingBag, Wand2,
 } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
-import { GlowButton } from "@/components/angie/GlowButton";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
