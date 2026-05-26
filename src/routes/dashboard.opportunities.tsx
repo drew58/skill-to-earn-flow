@@ -389,10 +389,13 @@ function OpportunityCard({
             {o.payout}
           </div>
         </div>
-        <a href={o.url} target="_blank" rel="noopener noreferrer">
-          <GlowButton className="text-xs">
-            Quick apply <ExternalLink className="h-3 w-3" />
-          </GlowButton>
+        <a
+          href={o.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] px-4 py-2 text-xs font-medium text-white shadow-[0_8px_30px_-8px_rgba(91,140,255,0.6)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_-8px_rgba(139,92,246,0.8)]"
+        >
+          Quick apply <ExternalLink className="h-3 w-3" />
         </a>
       </div>
     </GlassCard>
