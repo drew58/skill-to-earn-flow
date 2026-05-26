@@ -20,6 +20,6 @@ function ComingSoon({ title, blurb }: { title: string; blurb: string }) {
   );
 }
 
-export const MissionsRoute = createFileRoute("/dashboard/missions")({
+export const Route = createFileRoute("/dashboard/missions")({
   component: () => <ComingSoon title="Daily Missions" blurb="Generate an income plan and Angie will fill this with bite-sized daily missions, streaks, and completion animations." />,
 });
