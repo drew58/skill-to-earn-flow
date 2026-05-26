@@ -14,6 +14,9 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
+import { Route as DashboardOutreachRouteImport } from './routes/dashboard.outreach'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
 
@@ -42,6 +45,21 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardProfileRoute = DashboardProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardOutreachRoute = DashboardOutreachRouteImport.update({
+  id: '/outreach',
+  path: '/outreach',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPlansNewRoute = DashboardPlansNewRouteImport.update({
   id: '/plans/new',
   path: '/plans/new',
@@ -58,6 +76,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/outreach': typeof DashboardOutreachRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -66,6 +87,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/outreach': typeof DashboardOutreachRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -76,6 +100,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/outreach': typeof DashboardOutreachRoute
+  '/dashboard/profile': typeof DashboardProfileRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -87,6 +114,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/reset-password'
+    | '/dashboard/outreach'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -95,6 +125,9 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/dashboard/outreach'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -104,6 +137,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/reset-password'
+    | '/dashboard/outreach'
+    | '/dashboard/profile'
+    | '/dashboard/settings'
     | '/dashboard/'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -153,6 +189,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/profile': {
+      id: '/dashboard/profile'
+      path: '/profile'
+      fullPath: '/dashboard/profile'
+      preLoaderRoute: typeof DashboardProfileRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/outreach': {
+      id: '/dashboard/outreach'
+      path: '/outreach'
+      fullPath: '/dashboard/outreach'
+      preLoaderRoute: typeof DashboardOutreachRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/plans/new': {
       id: '/dashboard/plans/new'
       path: '/plans/new'
@@ -171,12 +228,18 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
+  DashboardOutreachRoute: typeof DashboardOutreachRoute
+  DashboardProfileRoute: typeof DashboardProfileRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardPlansPlanIdRoute: typeof DashboardPlansPlanIdRoute
   DashboardPlansNewRoute: typeof DashboardPlansNewRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardOutreachRoute: DashboardOutreachRoute,
+  DashboardProfileRoute: DashboardProfileRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardPlansPlanIdRoute: DashboardPlansPlanIdRoute,
   DashboardPlansNewRoute: DashboardPlansNewRoute,
