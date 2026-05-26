@@ -17,6 +17,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile'
 import { Route as DashboardOutreachRouteImport } from './routes/dashboard.outreach'
+import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard.opportunities'
 import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missions'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
@@ -61,6 +62,11 @@ const DashboardOutreachRoute = DashboardOutreachRouteImport.update({
   path: '/outreach',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardOpportunitiesRoute = DashboardOpportunitiesRouteImport.update({
+  id: '/opportunities',
+  path: '/opportunities',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardMissionsRoute = DashboardMissionsRouteImport.update({
   id: '/missions',
   path: '/missions',
@@ -83,6 +89,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard/missions': typeof DashboardMissionsRoute
+  '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -95,6 +102,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard/missions': typeof DashboardMissionsRoute
+  '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -109,6 +117,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard/missions': typeof DashboardMissionsRoute
+  '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -124,6 +133,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/reset-password'
     | '/dashboard/missions'
+    | '/dashboard/opportunities'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/dashboard/missions'
+    | '/dashboard/opportunities'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/reset-password'
     | '/dashboard/missions'
+    | '/dashboard/opportunities'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
@@ -222,6 +234,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardOutreachRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/opportunities': {
+      id: '/dashboard/opportunities'
+      path: '/opportunities'
+      fullPath: '/dashboard/opportunities'
+      preLoaderRoute: typeof DashboardOpportunitiesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/missions': {
       id: '/dashboard/missions'
       path: '/missions'
@@ -248,6 +267,7 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardMissionsRoute: typeof DashboardMissionsRoute
+  DashboardOpportunitiesRoute: typeof DashboardOpportunitiesRoute
   DashboardOutreachRoute: typeof DashboardOutreachRoute
   DashboardProfileRoute: typeof DashboardProfileRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
@@ -258,6 +278,7 @@ interface DashboardRouteChildren {
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardMissionsRoute: DashboardMissionsRoute,
+  DashboardOpportunitiesRoute: DashboardOpportunitiesRoute,
   DashboardOutreachRoute: DashboardOutreachRoute,
   DashboardProfileRoute: DashboardProfileRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
@@ -279,3 +300,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
