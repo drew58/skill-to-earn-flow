@@ -14,6 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
+      applications: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          input: Json | null
+          kind: string
+          opportunity_id: string | null
+          platform: string | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          input?: Json | null
+          kind: string
+          opportunity_id?: string | null
+          platform?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          input?: Json | null
+          kind?: string
+          opportunity_id?: string | null
+          platform?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      coach_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      coach_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coach_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "coach_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       missions: {
         Row: {
           completed: boolean
@@ -58,6 +150,27 @@ export type Database = {
           },
         ]
       }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       plans: {
         Row: {
           content: Json
@@ -94,8 +207,13 @@ export type Database = {
           experience_level: string | null
           goals: string | null
           id: string
+          linkedin_url: string | null
+          payment_methods: string[] | null
+          resume_path: string | null
+          resume_text: string | null
           skills: string[] | null
           updated_at: string
+          weekly_hours: number | null
         }
         Insert: {
           avatar_url?: string | null
@@ -105,8 +223,13 @@ export type Database = {
           experience_level?: string | null
           goals?: string | null
           id: string
+          linkedin_url?: string | null
+          payment_methods?: string[] | null
+          resume_path?: string | null
+          resume_text?: string | null
           skills?: string[] | null
           updated_at?: string
+          weekly_hours?: number | null
         }
         Update: {
           avatar_url?: string | null
@@ -116,8 +239,13 @@ export type Database = {
           experience_level?: string | null
           goals?: string | null
           id?: string
+          linkedin_url?: string | null
+          payment_methods?: string[] | null
+          resume_path?: string | null
+          resume_text?: string | null
           skills?: string[] | null
           updated_at?: string
+          weekly_hours?: number | null
         }
         Relationships: []
       }
@@ -181,6 +309,33 @@ export type Database = {
           tasks_completed?: number
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      user_memory: {
+        Row: {
+          created_at: string
+          id: string
+          key: string
+          updated_at: string
+          user_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key: string
+          updated_at?: string
+          user_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string
+          updated_at?: string
+          user_id?: string
+          value?: string
         }
         Relationships: []
       }

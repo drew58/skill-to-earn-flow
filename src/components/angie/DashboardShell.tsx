@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Sparkles, Target, MessageSquare, UserCircle2, Settings, LogOut, Compass } from "lucide-react";
+import { LayoutDashboard, Sparkles, Target, MessageSquare, UserCircle2, Settings, LogOut, Compass, Bot, Wand2 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Logo } from "./Logo";
 import { useAuth } from "@/lib/auth";
@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/dashboard/coach", label: "Coach", icon: Bot },
   { to: "/dashboard/plans/new", label: "Income Plans", icon: Sparkles },
   { to: "/dashboard/opportunities", label: "Opportunities", icon: Compass },
+  { to: "/dashboard/apply", label: "Instant Apply", icon: Wand2 },
   { to: "/dashboard/missions", label: "Missions", icon: Target },
   { to: "/dashboard/outreach", label: "Outreach", icon: MessageSquare },
-  { to: "/dashboard/profile", label: "Profile Builder", icon: UserCircle2 },
+  { to: "/dashboard/profile", label: "Profile", icon: UserCircle2 },
   { to: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
@@ -90,7 +92,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
       {/* Mobile bottom nav */}
       <nav className="glass-strong fixed inset-x-3 bottom-3 z-40 flex justify-around rounded-2xl p-1.5 md:hidden">
-        {[NAV[0], NAV[1], NAV[2], NAV[3], NAV[5]].map((item) => {
+        {[NAV[0], NAV[1], NAV[3], NAV[4], NAV[5]].map((item) => {
           const active = item.to === "/dashboard" ? path === "/dashboard" : path.startsWith(item.to);
           return (
             <Link

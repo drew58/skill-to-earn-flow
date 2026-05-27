@@ -19,8 +19,11 @@ import { Route as DashboardProfileRouteImport } from './routes/dashboard.profile
 import { Route as DashboardOutreachRouteImport } from './routes/dashboard.outreach'
 import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard.opportunities'
 import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missions'
+import { Route as DashboardCoachRouteImport } from './routes/dashboard.coach'
+import { Route as DashboardApplyRouteImport } from './routes/dashboard.apply'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
+import { Route as ApiPublicSubscribeRouteImport } from './routes/api/public/subscribe'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -72,6 +75,16 @@ const DashboardMissionsRoute = DashboardMissionsRouteImport.update({
   path: '/missions',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCoachRoute = DashboardCoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardApplyRoute = DashboardApplyRouteImport.update({
+  id: '/apply',
+  path: '/apply',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPlansNewRoute = DashboardPlansNewRouteImport.update({
   id: '/plans/new',
   path: '/plans/new',
@@ -82,18 +95,26 @@ const DashboardPlansPlanIdRoute = DashboardPlansPlanIdRouteImport.update({
   path: '/plans/$planId',
   getParentRoute: () => DashboardRoute,
 } as any)
+const ApiPublicSubscribeRoute = ApiPublicSubscribeRouteImport.update({
+  id: '/api/public/subscribe',
+  path: '/api/public/subscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/apply': typeof DashboardApplyRoute
+  '/dashboard/coach': typeof DashboardCoachRoute
   '/dashboard/missions': typeof DashboardMissionsRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
 }
@@ -101,12 +122,15 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/apply': typeof DashboardApplyRoute
+  '/dashboard/coach': typeof DashboardCoachRoute
   '/dashboard/missions': typeof DashboardMissionsRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
 }
@@ -116,12 +140,15 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/reset-password': typeof ResetPasswordRoute
+  '/dashboard/apply': typeof DashboardApplyRoute
+  '/dashboard/coach': typeof DashboardCoachRoute
   '/dashboard/missions': typeof DashboardMissionsRoute
   '/dashboard/opportunities': typeof DashboardOpportunitiesRoute
   '/dashboard/outreach': typeof DashboardOutreachRoute
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
 }
@@ -132,12 +159,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/reset-password'
+    | '/dashboard/apply'
+    | '/dashboard/coach'
     | '/dashboard/missions'
     | '/dashboard/opportunities'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
   fileRoutesByTo: FileRoutesByTo
@@ -145,12 +175,15 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/reset-password'
+    | '/dashboard/apply'
+    | '/dashboard/coach'
     | '/dashboard/missions'
     | '/dashboard/opportunities'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
   id:
@@ -159,12 +192,15 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/reset-password'
+    | '/dashboard/apply'
+    | '/dashboard/coach'
     | '/dashboard/missions'
     | '/dashboard/opportunities'
     | '/dashboard/outreach'
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
   fileRoutesById: FileRoutesById
@@ -174,6 +210,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicSubscribeRoute: typeof ApiPublicSubscribeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -248,6 +285,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardMissionsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/coach': {
+      id: '/dashboard/coach'
+      path: '/coach'
+      fullPath: '/dashboard/coach'
+      preLoaderRoute: typeof DashboardCoachRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/apply': {
+      id: '/dashboard/apply'
+      path: '/apply'
+      fullPath: '/dashboard/apply'
+      preLoaderRoute: typeof DashboardApplyRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/plans/new': {
       id: '/dashboard/plans/new'
       path: '/plans/new'
@@ -262,10 +313,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardPlansPlanIdRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/api/public/subscribe': {
+      id: '/api/public/subscribe'
+      path: '/api/public/subscribe'
+      fullPath: '/api/public/subscribe'
+      preLoaderRoute: typeof ApiPublicSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface DashboardRouteChildren {
+  DashboardApplyRoute: typeof DashboardApplyRoute
+  DashboardCoachRoute: typeof DashboardCoachRoute
   DashboardMissionsRoute: typeof DashboardMissionsRoute
   DashboardOpportunitiesRoute: typeof DashboardOpportunitiesRoute
   DashboardOutreachRoute: typeof DashboardOutreachRoute
@@ -277,6 +337,8 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardApplyRoute: DashboardApplyRoute,
+  DashboardCoachRoute: DashboardCoachRoute,
   DashboardMissionsRoute: DashboardMissionsRoute,
   DashboardOpportunitiesRoute: DashboardOpportunitiesRoute,
   DashboardOutreachRoute: DashboardOutreachRoute,
@@ -296,7 +358,18 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicSubscribeRoute: ApiPublicSubscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
