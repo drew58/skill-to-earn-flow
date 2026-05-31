@@ -274,9 +274,9 @@ function Testimonials() {
 
 function Pricing() {
   const tiers = [
-    { name: "Free", price: "$0", desc: "Try Angie and ship your first plan.", features: ["1 income plan", "Daily missions", "Basic outreach scripts"], cta: "Start Free", featured: false },
-    { name: "Pro", price: "$19", per: "/mo", desc: "Serious about a freelance income.", features: ["Unlimited plans", "AI chat assistant", "All outreach templates", "Profile builder", "PDF export"], cta: "Go Pro", featured: true },
-    { name: "Creator", price: "$39", per: "/mo", desc: "Multiple skills, multiple income streams.", features: ["Everything in Pro", "Multi-skill plans", "Priority AI", "Custom integrations"], cta: "Start Creator", featured: false },
+    { name: "Free", price: "$0", desc: "Try Angie and ship your first plan.", features: ["1 income plan / month", "5 coach messages / day", "Browse opportunities", "3 missions / day"], cta: "Start Free", featured: false },
+    { name: "Pro", price: "$19", per: "/mo", desc: "Serious about building freelance income.", features: ["Unlimited plans", "Unlimited AI coach", "Instant Apply Assistant", "Save opportunities", "All outreach templates", "Export PDF"], cta: "Go Pro", featured: true },
+    { name: "Accelerator", price: "$39", per: "/mo", desc: "Maximize speed with priority AI.", features: ["Everything in Pro", "Priority AI model", "Resume tailoring", "Early access", "Priority support"], cta: "Go Accelerator", featured: false },
   ];
   return (
     <section id="pricing" className="py-24">
@@ -309,7 +309,7 @@ function Pricing() {
                   </li>
                 ))}
               </ul>
-              <Link to="/auth">
+              <Link to="/pricing">
                 <GlowButton variant={t.featured ? "primary" : "secondary"} className="w-full">
                   {t.cta}
                 </GlowButton>

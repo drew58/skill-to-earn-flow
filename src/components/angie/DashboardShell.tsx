@@ -1,8 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Sparkles, Target, MessageSquare, UserCircle2, Settings, LogOut, Compass, Bot, Wand2 } from "lucide-react";
+import { LayoutDashboard, Sparkles, Target, MessageSquare, UserCircle2, Settings, LogOut, Compass, Bot, Wand2, Zap, Crown } from "lucide-react";
 import type { ReactNode } from "react";
 import { Logo } from "./Logo";
 import { useAuth } from "@/lib/auth";
+import { useSubscription } from "@/hooks/use-subscription";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -19,6 +20,7 @@ const NAV = [
 
 export function DashboardShell({ children }: { children: ReactNode }) {
   const { signOut, user } = useAuth();
+  const { tier, isPro } = useSubscription();
   const path = useRouterState({ select: (s) => s.location.pathname });
 
   return (
@@ -60,6 +62,20 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
+
+          {/* Upgrade CTA */}
+          {!isPro && (
+            <Link to="/pricing" className="mx-2 mb-3 block">
+              <div className="glass rounded-xl p-3 text-xs transition-all hover:border-[#8B5CF6]/40 hover:shadow-[0_0_30px_-10px_rgba(139,92,246,0.3)]">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-3.5 w-3.5 text-[#A78BFA]" />
+                  <span className="font-medium text-white/85">Upgrade to Pro</span>
+                </div>
+                <p className="mt-1 text-[10px] text-white/50">Unlimited plans, AI coach & Instant Apply</p>
+              </div>
+            </Link>
+          )}
+
           <div className="glass mt-auto rounded-2xl p-3 text-xs">
             <div className="flex items-center gap-2">
               <div className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-[#5B8CFF] to-[#8B5CF6] text-[11px] font-bold uppercase">
@@ -67,12 +83,23 @@ export function DashboardShell({ children }: { children: ReactNode }) {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="truncate text-white/85">{user?.email}</div>
-                <button
-                  onClick={signOut}
-                  className="mt-0.5 inline-flex items-center gap-1 text-white/45 transition-colors hover:text-white"
-                >
-                  <LogOut className="h-3 w-3" /> Sign out
-                </button>
+                <div className="mt-0.5 flex items-center gap-1">
+                  {isPro ? (
+                    <span className="inline-flex items-center gap-0.5 rounded-full bg-gradient-to-r from-[#5B8CFF]/20 to-[#8B5CF6]/20 px-1.5 py-0.5 text-[10px] text-[#A78BFA]">
+                      <Crown className="h-2.5 w-2.5" /> {tier}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-0.5 rounded-full bg-white/[0.04] px-1.5 py-0.5 text-[10px] text-white/50">
+                      Free
+                    </span>
+                  )}
+                  <button
+                    onClick={signOut}
+                    className="ml-1 inline-flex items-center gap-1 text-white/45 transition-colors hover:text-white"
+                  >
+                    <LogOut className="h-3 w-3" /> Sign out
+                  </button>
+                </div>
               </div>
             </div>
           </div>
