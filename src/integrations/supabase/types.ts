@@ -312,6 +312,87 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean
+          created_at: string
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          paddle_customer_id: string | null
+          paddle_subscription_id: string | null
+          status: string
+          tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          paddle_customer_id?: string | null
+          paddle_subscription_id?: string | null
+          status?: string
+          tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cancel_at_period_end?: boolean
+          created_at?: string
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          paddle_customer_id?: string | null
+          paddle_subscription_id?: string | null
+          status?: string
+          tier?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      usage_counters: {
+        Row: {
+          applications_today: number
+          coach_messages_today: number
+          created_at: string
+          daily_reset_at: string | null
+          id: string
+          missions_today: number
+          monthly_reset_at: string | null
+          plans_this_month: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          applications_today?: number
+          coach_messages_today?: number
+          created_at?: string
+          daily_reset_at?: string | null
+          id?: string
+          missions_today?: number
+          monthly_reset_at?: string | null
+          plans_this_month?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          applications_today?: number
+          coach_messages_today?: number
+          created_at?: string
+          daily_reset_at?: string | null
+          id?: string
+          missions_today?: number
+          monthly_reset_at?: string | null
+          plans_this_month?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_memory: {
         Row: {
           created_at: string
@@ -344,7 +425,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_or_create_usage_counters: {
+        Args: { _user_id: string }
+        Returns: {
+          applications_today: number
+          coach_messages_today: number
+          created_at: string
+          daily_reset_at: string | null
+          id: string
+          missions_today: number
+          monthly_reset_at: string | null
+          plans_this_month: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "usage_counters"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
