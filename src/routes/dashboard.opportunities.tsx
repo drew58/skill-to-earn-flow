@@ -2,14 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Search, Sparkles, Bookmark, BookmarkCheck, ExternalLink, Filter,
+  Search, Sparkles, Bookmark, BookmarkCheck, ExternalLink, Filter, Lock,
   Briefcase, Code2, PenTool, Megaphone, GraduationCap, Camera, Headphones,
   TrendingUp, Zap, Globe2, Building2, ShoppingBag, Wand2,
 } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
-
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useSubscription } from "@/hooks/use-subscription";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -63,6 +63,7 @@ const CATEGORIES: { key: Category | "All"; icon: typeof Briefcase; label: string
 
 function OpportunityExplorer() {
   const { user } = useAuth();
+  const { isPro } = useSubscription();
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState<Category | "All">("All");
   const [activeLevel, setActiveLevel] = useState<Level | "All">("All");
@@ -98,6 +99,13 @@ function OpportunityExplorer() {
 
   const toggleSave = async (o: Opportunity) => {
     if (!user) return;
+
+    // Free tier cannot save opportunities
+    if (!isPro) {
+      toast.error("Upgrade to Pro", { description: "Saving opportunities is a Pro feature." });
+      return;
+    }
+
     const isSaved = savedIds.has(o.id);
     const next = new Set(savedIds);
     if (isSaved) {
@@ -163,7 +171,9 @@ function OpportunityExplorer() {
                   : "border-white/10 bg-white/[0.04] text-white/70 hover:text-white",
               )}
             >
-              <Bookmark className="h-4 w-4" /> Saved{savedIds.size > 0 && <span className="text-white/50">· {savedIds.size}</span>}
+              {isPro ? <Bookmark className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+              Saved{savedIds.size > 0 && <span className="text-white/50">· {savedIds.size}</span>}
+              {!isPro && <span className="ml-1 rounded-full bg-[#8B5CF6]/20 px-1.5 py-0.5 text-[10px] text-[#A78BFA]">Pro</span>}
             </button>
           </div>
         </div>
