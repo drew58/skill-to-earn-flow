@@ -7,8 +7,10 @@ import {
   Sparkles, Upload, FileText, Loader2, Copy, Check, ExternalLink, Wand2, Linkedin, Search, ChevronRight,
 } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
+import { Paywall } from "@/components/angie/Paywall";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useSubscription } from "@/hooks/use-subscription";
 import { OPPORTUNITIES, findOpportunity, type Opportunity } from "@/lib/opportunities";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -32,6 +34,7 @@ const KIND_LABELS: { value: Kind; label: string; hint: string }[] = [
 
 function ApplyPage() {
   const { user, session } = useAuth();
+  const { isPro, canUse } = useSubscription();
   const search = useSearch({ from: "/dashboard/apply" });
   const preselected = search.opp ? findOpportunity(search.opp) ?? null : null;
 
@@ -153,6 +156,10 @@ function ApplyPage() {
   };
 
   const availableKinds = selectedOpp?.applicationKinds ?? KIND_LABELS.map((k) => k.value);
+
+  if (!canUse("instantApply")) {
+    return <Paywall feature="Instant Apply Assistant" />;
+  }
 
   return (
     <div className="space-y-8">
