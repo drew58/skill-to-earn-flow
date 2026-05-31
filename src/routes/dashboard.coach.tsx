@@ -2,10 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
-import { Send, Sparkles, Loader2, Brain, Target, Trash2 } from "lucide-react";
+import { Send, Sparkles, Loader2, Brain, Target, Trash2, Lock } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useSubscription } from "@/hooks/use-subscription";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -23,6 +24,7 @@ const STARTERS = [
 
 function CoachPage() {
   const { user, session } = useAuth();
+  const { isPro, remaining, increment } = useSubscription();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [memory, setMemory] = useState<Memory[]>([]);
   const [input, setInput] = useState("");
@@ -112,7 +114,14 @@ function CoachPage() {
               <div className="text-[11px] text-white/45">Knows your goals, plans, and history</div>
             </div>
           </div>
-          <span className="rounded-full bg-[#22C55E]/15 px-2.5 py-1 text-[10px] font-medium text-[#86EFAC]">Online</span>
+          <div className="flex items-center gap-2">
+            {!isPro && (
+              <span className="rounded-full bg-white/[0.04] px-2.5 py-1 text-[10px] text-white/50">
+                {remaining("coachPerDay")} left today
+              </span>
+            )}
+            <span className="rounded-full bg-[#22C55E]/15 px-2.5 py-1 text-[10px] font-medium text-[#86EFAC]">Online</span>
+          </div>
         </div>
 
         <div ref={scrollRef} className="flex-1 space-y-4 overflow-y-auto px-5 py-6">
