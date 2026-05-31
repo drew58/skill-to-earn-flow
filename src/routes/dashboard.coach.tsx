@@ -55,6 +55,16 @@ function CoachPage() {
 
   const send = async (text: string) => {
     if (!text.trim() || sending || !session) return;
+
+    // Free tier limit check
+    if (!isPro) {
+      const coachRemaining = remaining("coachPerDay");
+      if (coachRemaining <= 0) {
+        toast.error("Daily coach limit reached", { description: "Upgrade to Pro for unlimited coaching." });
+        return;
+      }
+    }
+
     const userMsg: Msg = { role: "user", content: text };
     setMessages((m) => [...m, userMsg]);
     setInput("");
@@ -78,6 +88,12 @@ function CoachPage() {
         return;
       }
       setMessages((m) => [...m, { role: "assistant", content: data.reply, metadata: { actions: data.actions } }]);
+
+      // Track usage for free tier
+      if (!isPro) {
+        await increment("coach");
+      }
+
       const newMemoryActions = (data.actions ?? []).filter((a: any) => a.kind === "memory_saved");
       if (newMemoryActions.length) {
         const { data: mem } = await supabase.from("user_memory").select("key,value").eq("user_id", user!.id);
