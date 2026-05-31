@@ -5,9 +5,11 @@ import { toast } from "sonner";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { GlowButton } from "@/components/angie/GlowButton";
 import { AiLoader } from "@/components/angie/AiLoader";
+import { Paywall } from "@/components/angie/Paywall";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { X, Plus, Sparkles } from "lucide-react";
+import { useSubscription } from "@/hooks/use-subscription";
+import { X, Plus, Sparkles, Lock } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/plans/new")({ component: NewPlan });
 
@@ -18,6 +20,7 @@ const GOALS = ["First $100","$500/month side income","$1-3K/month freelancing","
 
 function NewPlan() {
   const { user } = useAuth();
+  const { isPro, remaining, increment } = useSubscription();
   const navigate = useNavigate();
   const [skills, setSkills] = useState<string[]>([]);
   const [skillInput, setSkillInput] = useState("");
@@ -38,6 +41,16 @@ function NewPlan() {
   const generate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (skills.length === 0) return toast.error("Add at least one skill.");
+
+    // Free tier limit check
+    if (!isPro) {
+      const plansRemaining = remaining("plansPerMonth");
+      if (plansRemaining <= 0) {
+        toast.error("Plan limit reached", { description: "Free tier: 1 plan / month. Upgrade to Pro for unlimited plans." });
+        return;
+      }
+    }
+
     setBusy(true);
     try {
       const { data, error } = await supabase.functions.invoke("generate-plan", {
@@ -45,6 +58,11 @@ function NewPlan() {
       });
       if (error) throw error;
       if (!data?.plan) throw new Error("AI didn't return a plan");
+
+      // Track usage for free tier
+      if (!isPro) {
+        await increment("plans");
+      }
 
       // Save plan
       const { data: saved, error: insErr } = await supabase
@@ -93,13 +111,22 @@ function NewPlan() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#8B5CF6]">
-          <Sparkles className="h-3 w-3" /> Income plan generator
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#8B5CF6]">
+              <Sparkles className="h-3 w-3" /> Income plan generator
+            </div>
+            <h1 className="mt-1 text-2xl font-bold md:text-3xl">Tell Angie about you</h1>
+            <p className="mt-1 text-sm text-white/60">
+              Two minutes. One realistic plan. Zero hype.
+            </p>
+          </div>
+          {!isPro && (
+            <div className="shrink-0 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-3 py-1 text-[11px] text-[#A78BFA]">
+              {remaining("plansPerMonth")} plan left this month
+            </div>
+          )}
         </div>
-        <h1 className="mt-1 text-2xl font-bold md:text-3xl">Tell Angie about you</h1>
-        <p className="mt-1 text-sm text-white/60">
-          Two minutes. One realistic plan. Zero hype.
-        </p>
       </motion.div>
 
       <form onSubmit={generate} className="space-y-4">

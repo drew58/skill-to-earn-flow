@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -24,10 +25,16 @@ import { Route as DashboardApplyRouteImport } from './routes/dashboard.apply'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
 import { Route as ApiPublicSubscribeRouteImport } from './routes/api/public/subscribe'
+import { Route as ApiPublicPaddleWebhookRouteImport } from './routes/api/public/paddle-webhook'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -100,11 +107,17 @@ const ApiPublicSubscribeRoute = ApiPublicSubscribeRouteImport.update({
   path: '/api/public/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaddleWebhookRoute = ApiPublicPaddleWebhookRouteImport.update({
+  id: '/api/public/paddle-webhook',
+  path: '/api/public/paddle-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard/apply': typeof DashboardApplyRoute
   '/dashboard/coach': typeof DashboardCoachRoute
@@ -114,6 +127,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -121,6 +135,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard/apply': typeof DashboardApplyRoute
   '/dashboard/coach': typeof DashboardCoachRoute
@@ -130,6 +145,7 @@ export interface FileRoutesByTo {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -139,6 +155,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard/apply': typeof DashboardApplyRoute
   '/dashboard/coach': typeof DashboardCoachRoute
@@ -148,6 +165,7 @@ export interface FileRoutesById {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -158,6 +176,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/pricing'
     | '/reset-password'
     | '/dashboard/apply'
     | '/dashboard/coach'
@@ -167,6 +186,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/api/public/paddle-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -174,6 +194,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/pricing'
     | '/reset-password'
     | '/dashboard/apply'
     | '/dashboard/coach'
@@ -183,6 +204,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard'
+    | '/api/public/paddle-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -191,6 +213,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/pricing'
     | '/reset-password'
     | '/dashboard/apply'
     | '/dashboard/coach'
@@ -200,6 +223,7 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/'
+    | '/api/public/paddle-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -209,7 +233,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiPublicPaddleWebhookRoute: typeof ApiPublicPaddleWebhookRoute
   ApiPublicSubscribeRoute: typeof ApiPublicSubscribeRoute
 }
 
@@ -220,6 +246,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -320,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicSubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/paddle-webhook': {
+      id: '/api/public/paddle-webhook'
+      path: '/api/public/paddle-webhook'
+      fullPath: '/api/public/paddle-webhook'
+      preLoaderRoute: typeof ApiPublicPaddleWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -357,19 +397,11 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiPublicPaddleWebhookRoute: ApiPublicPaddleWebhookRoute,
   ApiPublicSubscribeRoute: ApiPublicSubscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
