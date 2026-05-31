@@ -90,9 +90,13 @@ export function useSubscription() {
       : "applications_today";
     const { data } = await supabase.from("usage_counters").select("*").eq("user_id", user.id).maybeSingle();
     if (!data) {
-      await supabase.from("usage_counters").insert({ user_id: user.id, [field]: 1 });
+      const insert: Record<string, unknown> = { user_id: user.id };
+      insert[field] = 1;
+      await supabase.from("usage_counters").insert(insert as any);
     } else {
-      await supabase.from("usage_counters").update({ [field]: (data[field] ?? 0) + 1 }).eq("user_id", user.id);
+      const update: Record<string, unknown> = {};
+      update[field] = ((data as any)[field] ?? 0) + 1;
+      await supabase.from("usage_counters").update(update as any).eq("user_id", user.id);
     }
     await fetchData();
     return true;

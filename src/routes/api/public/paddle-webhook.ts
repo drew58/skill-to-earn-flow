@@ -47,7 +47,7 @@ export const Route = createFileRoute("/api/public/paddle-webhook")({
                   paddle_customer_id: customerId,
                   current_period_start: currentPeriodStart ? new Date(currentPeriodStart).toISOString() : null,
                   current_period_end: currentPeriodEnd ? new Date(currentPeriodEnd).toISOString() : null,
-                  cancel_at_period_end: data.scheduled_change?.action === "cancel" ?? false,
+                  cancel_at_period_end: data.scheduled_change?.action === "cancel",
                   updated_at: new Date().toISOString(),
                 }, { onConflict: "user_id" });
               }
