@@ -111,13 +111,22 @@ function NewPlan() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#8B5CF6]">
-          <Sparkles className="h-3 w-3" /> Income plan generator
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#8B5CF6]">
+              <Sparkles className="h-3 w-3" /> Income plan generator
+            </div>
+            <h1 className="mt-1 text-2xl font-bold md:text-3xl">Tell Angie about you</h1>
+            <p className="mt-1 text-sm text-white/60">
+              Two minutes. One realistic plan. Zero hype.
+            </p>
+          </div>
+          {!isPro && (
+            <div className="shrink-0 rounded-full border border-[#8B5CF6]/30 bg-[#8B5CF6]/10 px-3 py-1 text-[11px] text-[#A78BFA]">
+              {remaining("plansPerMonth")} plan left this month
+            </div>
+          )}
         </div>
-        <h1 className="mt-1 text-2xl font-bold md:text-3xl">Tell Angie about you</h1>
-        <p className="mt-1 text-sm text-white/60">
-          Two minutes. One realistic plan. Zero hype.
-        </p>
       </motion.div>
 
       <form onSubmit={generate} className="space-y-4">
