@@ -69,7 +69,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Angie builds realistic income plans, daily missions, outreach scripts, and execution strategies based on your skills and goals.",
       },
-      { property: "og:title", content: "Angie — AI Income Execution Platform" },
+      { property: "og:title", content: "Angie — Turn Your Skills Into Income With AI" },
       {
         property: "og:description",
         content: "Stop guessing. Start earning. AI-generated income plans, daily missions, and outreach scripts.",
@@ -77,6 +77,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#0B1020" },
+      { name: "twitter:title", content: "Angie — Turn Your Skills Into Income With AI" },
+      { name: "description", content: "Angie is an AI income strategist that generates personalized plans, tasks, and outreach for users to monetize their skills." },
+      { property: "og:description", content: "Angie is an AI income strategist that generates personalized plans, tasks, and outreach for users to monetize their skills." },
+      { name: "twitter:description", content: "Angie is an AI income strategist that generates personalized plans, tasks, and outreach for users to monetize their skills." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65e91299-1dcb-4bbf-8c95-984c13b968e9/id-preview-c8ce2705--b0331167-5a9d-4b90-940a-93c3de4767a8.lovable.app-1780316957477.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65e91299-1dcb-4bbf-8c95-984c13b968e9/id-preview-c8ce2705--b0331167-5a9d-4b90-940a-93c3de4767a8.lovable.app-1780316957477.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
