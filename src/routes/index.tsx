@@ -394,7 +394,12 @@ function Footer() {
     <footer className="border-t border-white/5 py-8">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 sm:flex-row">
         <Logo />
-        <div className="text-xs text-white/40">© {new Date().getFullYear()} Angie. Built for doers.</div>
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-white/40">
+          <Link to="/terms" className="hover:text-white/70">Terms</Link>
+          <Link to="/privacy" className="hover:text-white/70">Privacy</Link>
+          <Link to="/refund" className="hover:text-white/70">Refund</Link>
+          <span>© {new Date().getFullYear()} Angie</span>
+        </div>
       </div>
     </footer>
   );
