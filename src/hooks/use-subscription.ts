@@ -84,20 +84,7 @@ export function useSubscription() {
 
   const increment = useCallback(async (feature: "plans" | "coach" | "missions" | "applications") => {
     if (!user || isPro) return true;
-    const field = feature === "plans" ? "plans_this_month"
-      : feature === "coach" ? "coach_messages_today"
-      : feature === "missions" ? "missions_today"
-      : "applications_today";
-    const { data } = await supabase.from("usage_counters").select("*").eq("user_id", user.id).maybeSingle();
-    if (!data) {
-      const insert: Record<string, unknown> = { user_id: user.id };
-      insert[field] = 1;
-      await supabase.from("usage_counters").insert(insert as any);
-    } else {
-      const update: Record<string, unknown> = {};
-      update[field] = ((data as any)[field] ?? 0) + 1;
-      await supabase.from("usage_counters").update(update as any).eq("user_id", user.id);
-    }
+    await supabase.rpc("increment_usage_counter" as any, { _feature: feature });
     await fetchData();
     return true;
   }, [user, isPro, fetchData]);

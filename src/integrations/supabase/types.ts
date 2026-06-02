@@ -446,6 +446,27 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      increment_usage_counter: {
+        Args: { _feature: string }
+        Returns: {
+          applications_today: number
+          coach_messages_today: number
+          created_at: string
+          daily_reset_at: string | null
+          id: string
+          missions_today: number
+          monthly_reset_at: string | null
+          plans_this_month: number
+          updated_at: string
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "usage_counters"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
     }
     Enums: {
       [_ in never]: never
