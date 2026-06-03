@@ -28,6 +28,7 @@ import { Route as DashboardApplyRouteImport } from './routes/dashboard.apply'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
 import { Route as ApiPublicSubscribeRouteImport } from './routes/api/public/subscribe'
+import { Route as ApiPublicPaystackWebhookRouteImport } from './routes/api/public/paystack-webhook'
 import { Route as ApiPublicPaddleWebhookRouteImport } from './routes/api/public/paddle-webhook'
 
 const TermsRoute = TermsRouteImport.update({
@@ -125,6 +126,12 @@ const ApiPublicSubscribeRoute = ApiPublicSubscribeRouteImport.update({
   path: '/api/public/subscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaystackWebhookRoute =
+  ApiPublicPaystackWebhookRouteImport.update({
+    id: '/api/public/paystack-webhook',
+    path: '/api/public/paystack-webhook',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPaddleWebhookRoute = ApiPublicPaddleWebhookRouteImport.update({
   id: '/api/public/paddle-webhook',
   path: '/api/public/paddle-webhook',
@@ -149,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
+  '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -170,6 +178,7 @@ export interface FileRoutesByTo {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
   '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
+  '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -193,6 +202,7 @@ export interface FileRoutesById {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
+  '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/'
     | '/api/public/paddle-webhook'
+    | '/api/public/paystack-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -238,6 +249,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard'
     | '/api/public/paddle-webhook'
+    | '/api/public/paystack-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -260,6 +272,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/'
     | '/api/public/paddle-webhook'
+    | '/api/public/paystack-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
@@ -275,6 +288,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
   ApiPublicPaddleWebhookRoute: typeof ApiPublicPaddleWebhookRoute
+  ApiPublicPaystackWebhookRoute: typeof ApiPublicPaystackWebhookRoute
   ApiPublicSubscribeRoute: typeof ApiPublicSubscribeRoute
 }
 
@@ -413,6 +427,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicSubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/paystack-webhook': {
+      id: '/api/public/paystack-webhook'
+      path: '/api/public/paystack-webhook'
+      fullPath: '/api/public/paystack-webhook'
+      preLoaderRoute: typeof ApiPublicPaystackWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/paddle-webhook': {
       id: '/api/public/paddle-webhook'
       path: '/api/public/paddle-webhook'
@@ -463,6 +484,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
   ApiPublicPaddleWebhookRoute: ApiPublicPaddleWebhookRoute,
+  ApiPublicPaystackWebhookRoute: ApiPublicPaystackWebhookRoute,
   ApiPublicSubscribeRoute: ApiPublicSubscribeRoute,
 }
 export const routeTree = rootRouteImport
