@@ -1,10 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { Check, Sparkles, Zap, Crown, ArrowLeft } from "lucide-react";
+import { Check, Sparkles, Zap, Crown, ArrowLeft, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { GlowButton } from "@/components/angie/GlowButton";
 import { Logo } from "@/components/angie/Logo";
 import { useAuth } from "@/lib/auth";
+import { initPaystackCheckout } from "@/lib/paystack.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/pricing")({ component: PricingPage });
 
@@ -169,7 +173,7 @@ function PricingPage() {
             <Check className="h-3.5 w-3.5 text-[#22C55E]" /> No hidden fees
           </span>
           <span className="inline-flex items-center gap-2">
-            <Check className="h-3.5 w-3.5 text-[#22C55E]" /> Secure Paddle checkout
+            <Check className="h-3.5 w-3.5 text-[#22C55E]" /> Secure Paystack checkout
           </span>
           <span className="inline-flex items-center gap-2">
             <Check className="h-3.5 w-3.5 text-[#22C55E]" /> 7-day money-back guarantee
@@ -186,10 +190,10 @@ function PricingPage() {
           <div className="mt-10 space-y-3">
             {[
               { q: "Can I cancel anytime?", a: "Yes. No contracts, no cancellation fees. Cancel from your dashboard in two clicks." },
-              { q: "What payment methods do you accept?", a: "All major credit/debit cards, PayPal, Apple Pay, Google Pay, and local methods via Paddle." },
+              { q: "What payment methods do you accept?", a: "All major credit/debit cards, bank transfer, USSD, and mobile money via Paystack — accepted worldwide." },
               { q: "Is there a money-back guarantee?", a: "Yes — 7-day full refund, no questions asked." },
               { q: "What happens to my data if I downgrade?", a: "Your plans and history stay. Free tier limits apply going forward." },
-              { q: "Is Paddle secure?", a: "Paddle is a Merchant of Record that handles billing, tax, and compliance globally. Your payment info never touches our servers." },
+              { q: "Is Paystack secure?", a: "Paystack is PCI-DSS Level 1 certified. Your payment info never touches our servers." },
             ].map((f) => (
               <GlassCard key={f.q} className="p-5">
                 <div className="font-medium">{f.q}</div>
@@ -203,7 +207,7 @@ function PricingPage() {
       {/* Footer */}
       <footer className="border-t border-white/5 py-8 text-center text-xs text-white/40">
         <div className="mx-auto max-w-6xl px-4">
-          Payments processed securely by Paddle. Angie is a software product — not financial advice.
+          Payments processed securely by Paystack. Angie is a software product — not financial advice.
         </div>
       </footer>
     </div>
@@ -211,13 +215,28 @@ function PricingPage() {
 }
 
 function CheckoutButton({ tier, label, featured }: { tier: "free" | "pro" | "accelerator"; label: string; featured: boolean }) {
-  const handleClick = () => {
+  const [loading, setLoading] = useState(false);
+  const initCheckout = useServerFn(initPaystackCheckout);
+
+  const handleClick = async () => {
     if (tier === "free") {
       window.location.href = "/dashboard";
       return;
     }
-    // Placeholder: will wire to Paddle.js checkout once Paddle is connected
-    alert(`Checkout for ${tier} will be available once Paddle is connected. Use your preview URL to complete Paddle setup.`);
+    setLoading(true);
+    try {
+      const callbackUrl = `${window.location.origin}/dashboard?upgraded=${tier}`;
+      const res = await initCheckout({ data: { tier, callbackUrl } });
+      if (res?.authorization_url) {
+        window.location.href = res.authorization_url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err?.message || "Could not start checkout. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -225,8 +244,9 @@ function CheckoutButton({ tier, label, featured }: { tier: "free" | "pro" | "acc
       variant={featured ? "primary" : "secondary"}
       className="w-full"
       onClick={handleClick}
+      disabled={loading}
     >
-      {label}
+      {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : label}
     </GlowButton>
   );
 }
