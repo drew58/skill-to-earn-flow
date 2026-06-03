@@ -25,6 +25,7 @@ import { Route as DashboardOpportunitiesRouteImport } from './routes/dashboard.o
 import { Route as DashboardMissionsRouteImport } from './routes/dashboard.missions'
 import { Route as DashboardCoachRouteImport } from './routes/dashboard.coach'
 import { Route as DashboardApplyRouteImport } from './routes/dashboard.apply'
+import { Route as DashboardPlansIndexRouteImport } from './routes/dashboard.plans.index'
 import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.new'
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
 import { Route as ApiPublicSubscribeRouteImport } from './routes/api/public/subscribe'
@@ -111,6 +112,11 @@ const DashboardApplyRoute = DashboardApplyRouteImport.update({
   path: '/apply',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPlansIndexRoute = DashboardPlansIndexRouteImport.update({
+  id: '/plans/',
+  path: '/plans/',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardPlansNewRoute = DashboardPlansNewRouteImport.update({
   id: '/plans/new',
   path: '/plans/new',
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
+  '/dashboard/plans/': typeof DashboardPlansIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -182,6 +189,7 @@ export interface FileRoutesByTo {
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
+  '/dashboard/plans': typeof DashboardPlansIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -206,6 +214,7 @@ export interface FileRoutesById {
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
   '/dashboard/plans/new': typeof DashboardPlansNewRoute
+  '/dashboard/plans/': typeof DashboardPlansIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
+    | '/dashboard/plans/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -253,6 +263,7 @@ export interface FileRouteTypes {
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
+    | '/dashboard/plans'
   id:
     | '__root__'
     | '/'
@@ -276,6 +287,7 @@ export interface FileRouteTypes {
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
     | '/dashboard/plans/new'
+    | '/dashboard/plans/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -406,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardApplyRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/plans/': {
+      id: '/dashboard/plans/'
+      path: '/plans'
+      fullPath: '/dashboard/plans/'
+      preLoaderRoute: typeof DashboardPlansIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/plans/new': {
       id: '/dashboard/plans/new'
       path: '/plans/new'
@@ -455,6 +474,7 @@ interface DashboardRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
   DashboardPlansPlanIdRoute: typeof DashboardPlansPlanIdRoute
   DashboardPlansNewRoute: typeof DashboardPlansNewRoute
+  DashboardPlansIndexRoute: typeof DashboardPlansIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
@@ -468,6 +488,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
   DashboardPlansPlanIdRoute: DashboardPlansPlanIdRoute,
   DashboardPlansNewRoute: DashboardPlansNewRoute,
+  DashboardPlansIndexRoute: DashboardPlansIndexRoute,
 }
 
 const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
