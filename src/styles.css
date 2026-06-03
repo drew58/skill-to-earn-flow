@@ -117,6 +117,26 @@
   --ring: var(--brand-blue);
 }
 
+.light {
+  --background: oklch(0.985 0.005 260);
+  --foreground: oklch(0.18 0.04 270);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.04 270);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.04 270);
+  --primary: var(--brand-blue);
+  --primary-foreground: oklch(0.99 0.005 250);
+  --secondary: oklch(0.95 0.01 260);
+  --secondary-foreground: oklch(0.2 0.04 270);
+  --muted: oklch(0.95 0.01 260);
+  --muted-foreground: oklch(0.45 0.02 260);
+  --accent: var(--brand-purple);
+  --accent-foreground: oklch(0.99 0.005 250);
+  --border: oklch(0 0 0 / 10%);
+  --input: oklch(0 0 0 / 12%);
+  --ring: var(--brand-blue);
+}
+
 @layer base {
   * { border-color: var(--color-border); }
 
