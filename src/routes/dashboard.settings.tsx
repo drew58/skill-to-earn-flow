@@ -1,18 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useTheme } from "@/lib/theme";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { GlowButton } from "@/components/angie/GlowButton";
-import { Moon, Sun, Loader2 } from "lucide-react";
+import { useSubscription } from "@/hooks/use-subscription";
+import { Moon, Sun, Loader2, Zap, Crown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/dashboard/settings")({ component: Settings });
 
 function Settings() {
   const { user, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { tier } = useSubscription();
   const [displayName, setDisplayName] = useState("");
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -60,78 +64,124 @@ function Settings() {
     }
   };
 
+  const fadeIn = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.4 },
+  };
+
   return (
-    <div className="mx-auto max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">Settings</h1>
+    <div className="mx-auto max-w-2xl space-y-6">
+      <motion.h1 {...fadeIn} className="text-2xl font-bold">Settings</motion.h1>
 
-      {/* Account */}
-      <GlassCard>
-        <div className="text-xs uppercase tracking-wider text-white/50">Account</div>
-        <div className="mt-2 text-sm">{user?.email}</div>
-      </GlassCard>
+      {/* Account Section */}
+      <motion.div {...fadeIn} transition={{ delay: 0.1 }}>
+        <h2 className="mb-3 text-sm font-semibold text-white/70">Account</h2>
+        <GlassCard>
+          <div className="text-xs uppercase tracking-wider text-white/50">Email</div>
+          <div className="mt-2 text-sm">{user?.email}</div>
+        </GlassCard>
+      </motion.div>
 
-      {/* Display name */}
-      <GlassCard>
-        <div className="text-xs uppercase tracking-wider text-white/50">Display name</div>
-        <p className="mt-1 text-xs text-white/50">How Angie greets you in the dashboard.</p>
-        <div className="mt-3 flex gap-2">
-          <input
-            value={displayName}
-            onChange={(e) => setDisplayName(e.target.value)}
-            placeholder={loading ? "Loading…" : "Your name"}
-            disabled={loading || saving}
-            maxLength={60}
-            className="glass flex-1 rounded-xl px-3 py-2 text-sm outline-none placeholder:text-white/30"
-          />
-          <GlowButton onClick={saveName} disabled={loading || saving}>
-            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
-          </GlowButton>
-        </div>
-      </GlassCard>
+      {/* Display Name */}
+      <motion.div {...fadeIn} transition={{ delay: 0.15 }}>
+        <h2 className="mb-3 text-sm font-semibold text-white/70">Profile</h2>
+        <GlassCard>
+          <div className="text-xs uppercase tracking-wider text-white/50">Display name</div>
+          <p className="mt-1 text-xs text-white/50">How Angie greets you in the dashboard.</p>
+          <div className="mt-3 flex gap-2">
+            <input
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder={loading ? "Loading…" : "Your name"}
+              disabled={loading || saving}
+              maxLength={60}
+              className="glass flex-1 rounded-xl px-3 py-2 text-sm outline-none placeholder:text-white/30"
+            />
+            <GlowButton onClick={saveName} disabled={loading || saving}>
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
+            </GlowButton>
+          </div>
+        </GlassCard>
+      </motion.div>
 
-      {/* Theme */}
-      <GlassCard>
-        <div className="text-xs uppercase tracking-wider text-white/50">Theme</div>
-        <p className="mt-1 text-xs text-white/50">
-          Switch between dark and light. The dashboard is optimized for dark mode.
-        </p>
-        <div className="mt-3 inline-flex rounded-xl border border-white/10 bg-white/[0.03] p-1">
-          <button
-            type="button"
-            onClick={() => setTheme("dark")}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition ${
-              theme === "dark"
-                ? "bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] text-white shadow-[0_8px_24px_-8px_rgba(91,140,255,0.6)]"
-                : "text-white/60 hover:text-white"
-            }`}
-          >
-            <Moon className="h-3.5 w-3.5" /> Dark
-          </button>
-          <button
-            type="button"
-            onClick={() => setTheme("light")}
-            className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition ${
-              theme === "light"
-                ? "bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] text-white shadow-[0_8px_24px_-8px_rgba(91,140,255,0.6)]"
-                : "text-white/60 hover:text-white"
-            }`}
-          >
-            <Sun className="h-3.5 w-3.5" /> Light
-          </button>
-        </div>
-      </GlassCard>
+      {/* Theme Section */}
+      <motion.div {...fadeIn} transition={{ delay: 0.2 }}>
+        <h2 className="mb-3 text-sm font-semibold text-white/70">Appearance</h2>
+        <GlassCard>
+          <div className="text-xs uppercase tracking-wider text-white/50">Theme</div>
+          <p className="mt-1 text-xs text-white/50">Choose between dark and light mode. Dark is optimized for performance.</p>
+          <div className="mt-4 flex gap-3">
+            <button
+              onClick={() => setTheme("dark")}
+              className={cn(
+                "group flex flex-1 items-center justify-center gap-2 rounded-xl border px-4 py-3 transition-all",
+                theme === "dark"
+                  ? "border-[#5B8CFF] bg-[#5B8CFF]/10 text-white"
+                  : "border-white/10 bg-white/[0.03] text-white/60 hover:text-white",
+              )}
+            >
+              <Moon className="h-4 w-4" />
+              <span className="text-sm font-medium">Dark</span>
+            </button>
+            <button
+              onClick={() => setTheme("light")}
+              className={cn(
+                "group flex flex-1 items-center justify-center gap-2 rounded-xl border px-4 py-3 transition-all",
+                theme === "light"
+                  ? "border-[#5B8CFF] bg-[#5B8CFF]/10 text-white"
+                  : "border-white/10 bg-white/[0.03] text-white/60 hover:text-white",
+              )}
+            >
+              <Sun className="h-4 w-4" />
+              <span className="text-sm font-medium">Light</span>
+            </button>
+          </div>
+        </GlassCard>
+      </motion.div>
 
-      {/* Subscription */}
-      <GlassCard>
-        <div className="text-xs uppercase tracking-wider text-white/50">Subscription</div>
-        <div className="mt-2 text-sm text-white/70">
-          Manage your plan from the pricing page.
-        </div>
-      </GlassCard>
+      {/* Subscription Section */}
+      <motion.div {...fadeIn} transition={{ delay: 0.25 }}>
+        <h2 className="mb-3 text-sm font-semibold text-white/70">Subscription</h2>
+        <GlassCard>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-white/50">Current Plan</div>
+              <div className="mt-2 flex items-center gap-2">
+                <div>
+                  <div className="text-sm font-semibold capitalize">{tier === "free" ? "Free" : tier === "pro" ? "Pro" : "Accelerator"} Plan</div>
+                  <p className="mt-1 text-xs text-white/50">
+                    {tier === "free" && "Upgrade to unlock premium features and unlimited access"}
+                    {tier === "pro" && "Advanced AI and premium features enabled"}
+                    {tier === "accelerator" && "Priority AI (GPT-5 class) with all features"}
+                  </p>
+                </div>
+              </div>
+            </div>
+            {tier !== "accelerator" && (
+              tier === "pro" ? (
+                <Crown className="h-5 w-5 text-[#C9A84C]" />
+              ) : (
+                <Zap className="h-5 w-5 text-[#5B8CFF]" />
+              )
+            )}
+          </div>
+        </GlassCard>
+      </motion.div>
 
-      <GlowButton variant="secondary" onClick={signOut}>
-        Sign out
-      </GlowButton>
+      {/* Security Section */}
+      <motion.div {...fadeIn} transition={{ delay: 0.3 }}>
+        <h2 className="mb-3 text-sm font-semibold text-white/70">Security</h2>
+        <GlassCard>
+          <div className="text-xs uppercase tracking-wider text-white/50">Session</div>
+          <p className="mt-1 text-xs text-white/50">Sign out from this device and all sessions.</p>
+          <div className="mt-4">
+            <GlowButton variant="secondary" onClick={signOut} className="w-full">
+              Sign out
+            </GlowButton>
+          </div>
+        </GlassCard>
+      </motion.div>
     </div>
   );
 }

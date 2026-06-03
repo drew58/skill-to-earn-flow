@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Save, UserCircle2, Linkedin } from "lucide-react";
+import { Loader2, Save, UserCircle2, Linkedin, Upload, FileText } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -23,11 +23,13 @@ type Profile = {
   payment_methods: string[];
   linkedin_url: string;
   resume_text: string;
+  resume_file_url?: string;
 };
 
 const EMPTY: Profile = {
   display_name: "", country: "", experience_level: "Beginner", skills: [],
   goals: "", weekly_hours: null, payment_methods: [], linkedin_url: "", resume_text: "",
+  resume_file_url: "",
 };
 
 function ProfilePage() {
@@ -36,12 +38,14 @@ function ProfilePage() {
   const [skillInput, setSkillInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [jobProfileMode, setJobProfileMode] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     (async () => {
       const { data } = await supabase.from("profiles")
-        .select("display_name,country,experience_level,skills,goals,weekly_hours,payment_methods,linkedin_url,resume_text")
+        .select("display_name,country,experience_level,skills,goals,weekly_hours,payment_methods,linkedin_url,resume_text,resume_file_url")
         .eq("id", user.id).maybeSingle();
       if (data) {
         setP({
@@ -54,6 +58,7 @@ function ProfilePage() {
           payment_methods: data.payment_methods ?? [],
           linkedin_url: data.linkedin_url ?? "",
           resume_text: data.resume_text ?? "",
+          resume_file_url: data.resume_file_url ?? "",
         });
       }
       setLoading(false);
@@ -76,6 +81,42 @@ function ProfilePage() {
     });
   };
 
+  const handleResumeUpload = async (file: File) => {
+    if (!user || !file) return;
+    
+    const validTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "image/jpeg", "image/png"];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Invalid file type. Upload PDF, DOC, DOCX, or image files.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File too large. Max 5MB.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const filename = `resume-${user.id}-${Date.now()}`;
+      const { error: uploadErr } = await supabase.storage
+        .from("resumes")
+        .upload(filename, file, { upsert: true });
+      
+      if (uploadErr) throw uploadErr;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from("resumes")
+        .getPublicUrl(filename);
+
+      setP({ ...p, resume_file_url: publicUrl });
+      toast.success("Resume uploaded successfully");
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to upload resume");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const save = async () => {
     if (!user) return;
     setSaving(true);
@@ -89,11 +130,15 @@ function ProfilePage() {
       payment_methods: p.payment_methods,
       linkedin_url: p.linkedin_url || null,
       resume_text: p.resume_text || null,
+      resume_file_url: p.resume_file_url || null,
       updated_at: new Date().toISOString(),
     }).eq("id", user.id);
     setSaving(false);
     if (error) toast.error(error.message);
-    else toast.success("Profile saved", { description: "Angie will use this to tailor recommendations." });
+    else {
+      toast.success("Profile saved", { description: "Angie will use this to tailor recommendations." });
+      setJobProfileMode(true);
+    }
   };
 
   if (loading) {
@@ -109,10 +154,57 @@ function ProfilePage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Profile Builder</h1>
-            <p className="text-sm text-white/55">Better profile = smarter recommendations and tailored applications.</p>
+            <p className="text-sm text-white/55">Complete your profile to unlock tailored opportunities and AI recommendations.</p>
           </div>
         </div>
       </motion.div>
+
+      {jobProfileMode && (p.display_name || p.country) && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <GlassCard className="border-l-4 border-[#5B8CFF]">
+            <div className="text-xs uppercase tracking-wider text-[#5B8CFF] font-semibold">Job Profile Preview</div>
+            <div className="mt-4 space-y-3">
+              <div>
+                <div className="text-xs text-white/50">Full Name</div>
+                <div className="text-lg font-semibold text-white">{p.display_name || "Not set"}</div>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <div className="text-xs text-white/50">Location</div>
+                  <div className="text-sm text-white">{p.country || "Not set"}</div>
+                </div>
+                <div>
+                  <div className="text-xs text-white/50">Experience Level</div>
+                  <div className="text-sm text-white">{p.experience_level}</div>
+                </div>
+              </div>
+              {p.skills.length > 0 && (
+                <div>
+                  <div className="text-xs text-white/50 mb-2">Skills</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.skills.slice(0, 5).map((s) => (
+                      <span key={s} className="inline-block rounded-full bg-[#5B8CFF]/20 px-2.5 py-1 text-xs text-[#A78BFA]">
+                        {s}
+                      </span>
+                    ))}
+                    {p.skills.length > 5 && (
+                      <span className="inline-block rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/50">
+                        +{p.skills.length - 5}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+              {p.weekly_hours && (
+                <div>
+                  <div className="text-xs text-white/50">Availability</div>
+                  <div className="text-sm text-white">{p.weekly_hours} hours/week</div>
+                </div>
+              )}
+            </div>
+          </GlassCard>
+        </motion.div>
+      )}
 
       <GlassCard className="p-6">
         <h2 className="text-sm font-semibold">About you</h2>
@@ -196,26 +288,64 @@ function ProfilePage() {
             </div>
           </Field>
           <Field label="Resume / CV summary (paste text)">
-            <textarea value={p.resume_text} onChange={(e) => setP({ ...p, resume_text: e.target.value })} rows={6} className={inputCls}
+            <textarea value={p.resume_text} onChange={(e) => setP({ ...p, resume_text: e.target.value })} rows={4} className={inputCls}
               placeholder="Paste your resume or 5-10 lines of background. Used by the Instant Apply Assistant." />
           </Field>
         </div>
       </GlassCard>
 
+      <GlassCard className="p-6">
+        <h2 className="text-sm font-semibold">Resume / CV File</h2>
+        <p className="mt-1 text-xs text-white/50">Upload a PDF, DOC, DOCX, or image (max 5MB).</p>
+        <div className="mt-4">
+          {p.resume_file_url ? (
+            <div className="flex items-center justify-between rounded-xl border border-[#5B8CFF]/30 bg-[#5B8CFF]/10 p-3">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-[#5B8CFF]" />
+                <span className="text-xs text-white/70">Resume uploaded</span>
+              </div>
+              <button
+                onClick={() => setP({ ...p, resume_file_url: "" })}
+                className="text-xs text-white/50 hover:text-white"
+              >
+                Remove
+              </button>
+            </div>
+          ) : (
+            <label className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-white/10 p-6 hover:border-[#5B8CFF]/50 hover:bg-[#5B8CFF]/5 cursor-pointer transition-all">
+              <Upload className="h-5 w-5 text-white/40 mb-2" />
+              <span className="text-xs font-medium text-white/60">Click to upload resume</span>
+              <span className="text-xs text-white/40 mt-1">PDF, DOC, DOCX or image</span>
+              <input
+                type="file"
+                hidden
+                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleResumeUpload(file);
+                  }
+                }}
+              />
+            </label>
+          )}
+        </div>
+      </GlassCard>
+
       <div className="sticky bottom-4 z-10 flex justify-end">
         <button
-          onClick={save} disabled={saving}
-          className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_40px_-12px_rgba(139,92,246,0.8)] transition-all hover:-translate-y-0.5 disabled:opacity-60"
+          onClick={save} disabled={saving || uploading}
+          className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_40px_-12px_rgba(139,92,246,0.6)] hover:shadow-[0_16px_50px_-12px_rgba(139,92,246,0.8)] disabled:opacity-50 disabled:pointer-events-none transition-all"
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          {saving ? "Saving…" : "Save profile"}
+          {saving || uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          {saving || uploading ? "Saving…" : "Save profile"}
         </button>
       </div>
     </div>
   );
 }
 
-const inputCls = "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder:text-white/40 outline-none transition-all focus:border-[#5B8CFF]/60 focus:ring-2 focus:ring-[#5B8CFF]/30";
+const inputCls = "w-full rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2.5 text-sm text-white placeholder:text-white/40 outline-none transition-all focus:border-[#5B8CFF]/60 focus:ring-1 focus:ring-[#5B8CFF]/30";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
