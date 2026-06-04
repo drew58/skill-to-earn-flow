@@ -108,6 +108,10 @@ function ApplyPage() {
   const generate = async () => {
     if (!selectedOpp) return toast.error("Pick an opportunity first");
     if (!session) return;
+    if (!isPro && remaining("applicationsPerDay") <= 0) {
+      toast.error("Daily limit reached", { description: "Free tier: 4 applications/day. Upgrade to Pro for unlimited." });
+      return;
+    }
     setGenerating(true);
     setOutput("");
     try {
@@ -137,6 +141,7 @@ function ApplyPage() {
       const data = await r.json();
       if (!r.ok) throw new Error(data?.error ?? "Generation failed");
       setOutput(data.content);
+      if (!isPro) await increment("applications");
       // refresh past
       const { data: apps } = await supabase.from("applications")
         .select("id,kind,platform,content,created_at,input")
