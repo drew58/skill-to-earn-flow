@@ -19,7 +19,7 @@ export type Usage = {
 };
 
 const TIER_LIMITS: Record<Tier, { plansPerMonth: number; coachPerDay: number; missionsPerDay: number; applicationsPerDay: number; instantApply: boolean; savedOpps: boolean }> = {
-  free: { plansPerMonth: 1, coachPerDay: 5, missionsPerDay: 3, applicationsPerDay: 2, instantApply: false, savedOpps: false },
+  free: { plansPerMonth: 1, coachPerDay: 5, missionsPerDay: 3, applicationsPerDay: 4, instantApply: true, savedOpps: false },
   pro: { plansPerMonth: Infinity, coachPerDay: Infinity, missionsPerDay: Infinity, applicationsPerDay: Infinity, instantApply: true, savedOpps: true },
   accelerator: { plansPerMonth: Infinity, coachPerDay: Infinity, missionsPerDay: Infinity, applicationsPerDay: Infinity, instantApply: true, savedOpps: true },
 };
