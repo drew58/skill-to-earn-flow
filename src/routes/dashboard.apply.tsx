@@ -34,7 +34,7 @@ const KIND_LABELS: { value: Kind; label: string; hint: string }[] = [
 
 function ApplyPage() {
   const { user, session } = useAuth();
-  const { isPro, canUse, remaining, increment } = useSubscription();
+  const { isPro, remaining, increment } = useSubscription();
   const search = useSearch({ from: "/dashboard/apply" });
   const preselected = search.opp ? findOpportunity(search.opp) ?? null : null;
 
