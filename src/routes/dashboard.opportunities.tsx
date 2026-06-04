@@ -69,6 +69,9 @@ function OpportunityExplorer() {
   const [activeLevel, setActiveLevel] = useState<Level | "All">("All");
   const [savedOnly, setSavedOnly] = useState(false);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+  const [planOpps, setPlanOpps] = useState<{ name: string; why: string; effort?: string }[]>([]);
+  const [bestPick, setBestPick] = useState<{ name: string; rationale: string } | null>(null);
+  const [planTitle, setPlanTitle] = useState<string>("");
 
   useEffect(() => {
     if (!user) return;
@@ -77,6 +80,19 @@ function OpportunityExplorer() {
       .select("opportunity_id")
       .then(({ data }) => {
         if (data) setSavedIds(new Set(data.map((d) => d.opportunity_id as string)));
+      });
+    supabase
+      .from("plans")
+      .select("title,content,created_at")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) return;
+        const c = (data.content ?? {}) as { top_opportunities?: { name: string; why: string; effort?: string }[]; best_recommendation?: { name: string; rationale: string } };
+        setPlanOpps(c.top_opportunities ?? []);
+        setBestPick(c.best_recommendation ?? null);
+        setPlanTitle(data.title ?? "");
       });
   }, [user]);
 

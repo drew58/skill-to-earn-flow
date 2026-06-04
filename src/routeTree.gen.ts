@@ -30,7 +30,6 @@ import { Route as DashboardPlansNewRouteImport } from './routes/dashboard.plans.
 import { Route as DashboardPlansPlanIdRouteImport } from './routes/dashboard.plans.$planId'
 import { Route as ApiPublicSubscribeRouteImport } from './routes/api/public/subscribe'
 import { Route as ApiPublicPaystackWebhookRouteImport } from './routes/api/public/paystack-webhook'
-import { Route as ApiPublicPaddleWebhookRouteImport } from './routes/api/public/paddle-webhook'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -138,11 +137,6 @@ const ApiPublicPaystackWebhookRoute =
     path: '/api/public/paystack-webhook',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicPaddleWebhookRoute = ApiPublicPaddleWebhookRouteImport.update({
-  id: '/api/public/paddle-webhook',
-  path: '/api/public/paddle-webhook',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -161,7 +155,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
@@ -184,7 +177,6 @@ export interface FileRoutesByTo {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard': typeof DashboardIndexRoute
-  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
@@ -209,7 +201,6 @@ export interface FileRoutesById {
   '/dashboard/profile': typeof DashboardProfileRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/': typeof DashboardIndexRoute
-  '/api/public/paddle-webhook': typeof ApiPublicPaddleWebhookRoute
   '/api/public/paystack-webhook': typeof ApiPublicPaystackWebhookRoute
   '/api/public/subscribe': typeof ApiPublicSubscribeRoute
   '/dashboard/plans/$planId': typeof DashboardPlansPlanIdRoute
@@ -235,7 +226,6 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/'
-    | '/api/public/paddle-webhook'
     | '/api/public/paystack-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
@@ -258,7 +248,6 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard'
-    | '/api/public/paddle-webhook'
     | '/api/public/paystack-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
@@ -282,7 +271,6 @@ export interface FileRouteTypes {
     | '/dashboard/profile'
     | '/dashboard/settings'
     | '/dashboard/'
-    | '/api/public/paddle-webhook'
     | '/api/public/paystack-webhook'
     | '/api/public/subscribe'
     | '/dashboard/plans/$planId'
@@ -299,7 +287,6 @@ export interface RootRouteChildren {
   RefundRoute: typeof RefundRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermsRoute: typeof TermsRoute
-  ApiPublicPaddleWebhookRoute: typeof ApiPublicPaddleWebhookRoute
   ApiPublicPaystackWebhookRoute: typeof ApiPublicPaystackWebhookRoute
   ApiPublicSubscribeRoute: typeof ApiPublicSubscribeRoute
 }
@@ -453,13 +440,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicPaystackWebhookRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/paddle-webhook': {
-      id: '/api/public/paddle-webhook'
-      path: '/api/public/paddle-webhook'
-      fullPath: '/api/public/paddle-webhook'
-      preLoaderRoute: typeof ApiPublicPaddleWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -504,10 +484,19 @@ const rootRouteChildren: RootRouteChildren = {
   RefundRoute: RefundRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermsRoute: TermsRoute,
-  ApiPublicPaddleWebhookRoute: ApiPublicPaddleWebhookRoute,
   ApiPublicPaystackWebhookRoute: ApiPublicPaystackWebhookRoute,
   ApiPublicSubscribeRoute: ApiPublicSubscribeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
