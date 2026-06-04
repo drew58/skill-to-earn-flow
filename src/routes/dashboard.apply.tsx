@@ -161,10 +161,8 @@ function ApplyPage() {
   };
 
   const availableKinds = selectedOpp?.applicationKinds ?? KIND_LABELS.map((k) => k.value);
-
-  if (!canUse("instantApply")) {
-    return <Paywall feature="Instant Apply Assistant" />;
-  }
+  const dailyLeft = !isPro ? remaining("applicationsPerDay") : Infinity;
+  const outOfQuota = !isPro && dailyLeft <= 0;
 
   return (
     <div className="space-y-8">
@@ -184,8 +182,22 @@ function ApplyPage() {
           <p className="mt-3 max-w-xl text-sm text-white/60 md:text-base">
             Upload your CV, pick an opportunity, and Angie writes proposals, cover letters, gigs, and DMs optimized for that exact platform.
           </p>
+          {!isPro && (
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-white/75">
+              <Sparkles className="h-3 w-3 text-[#A78BFA]" />
+              <span>
+                Free tier — <strong className="text-white">{Math.max(0, dailyLeft)} of 4</strong> applications left today.
+              </span>
+              {outOfQuota && (
+                <a href="/pricing" className="ml-1 rounded-full bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] px-2.5 py-0.5 text-[11px] font-semibold text-white">
+                  Upgrade
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </motion.div>
+
 
       <div className="grid gap-5 lg:grid-cols-[1fr_1.1fr]">
         {/* Left: inputs */}
