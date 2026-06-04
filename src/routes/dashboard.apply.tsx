@@ -323,7 +323,7 @@ function ApplyPage() {
 
             <button
               onClick={generate}
-              disabled={generating || !selectedOpp}
+              disabled={generating || !selectedOpp || outOfQuota}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] py-3.5 text-sm font-semibold text-white shadow-[0_12px_40px_-12px_rgba(139,92,246,0.8)] transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
