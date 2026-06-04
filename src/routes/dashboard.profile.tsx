@@ -146,6 +146,7 @@ function ProfilePage() {
     else {
       toast.success("Profile saved", { description: "Angie will use this to tailor recommendations." });
       setJobProfileMode(true);
+      setEditing(false);
     }
   };
 
