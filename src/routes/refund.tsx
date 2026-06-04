@@ -59,7 +59,7 @@ function RefundPage() {
 
             <section>
               <h2 className="text-lg font-semibold text-white">How to Request a Refund</h2>
-              <p className="mt-2">Email us at <strong>support@angie.ai</strong> with the subject "Refund Request" and include the email address associated with your Angie account. We will process your refund within 5 business days. Refunds are issued to your original payment method via Paddle.</p>
+              <p className="mt-2">Email us at <strong>support@angie.ai</strong> with the subject "Refund Request" and include the email address associated with your Angie account. We will process your refund within 5 business days. Refunds are issued to your original payment method via Paystack.</p>
             </section>
 
             <section>

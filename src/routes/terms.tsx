@@ -51,12 +51,12 @@ function TermsPage() {
 
             <section>
               <h2 className="text-lg font-semibold text-white">4. Subscriptions & Billing</h2>
-              <p className="mt-2">Some features require a paid subscription. Payments are processed by Paddle, our Merchant of Record. By subscribing, you agree to Paddle's terms. Subscriptions auto-renew unless cancelled. You may cancel anytime from your account settings.</p>
+              <p className="mt-2">Some features require a paid subscription. Payments are processed by Paystack, our Merchant of Record. By subscribing, you agree to Paystack's terms. Subscriptions auto-renew unless cancelled. You may cancel anytime from your account settings.</p>
             </section>
 
             <section>
               <h2 className="text-lg font-semibold text-white">5. Refund Policy</h2>
-              <p className="mt-2">We offer a 7-day money-back guarantee for first-time subscribers. If you are not satisfied, contact us within 7 days of your initial purchase for a full refund. Refunds are processed through Paddle.</p>
+              <p className="mt-2">We offer a 7-day money-back guarantee for first-time subscribers. If you are not satisfied, contact us within 7 days of your initial purchase for a full refund. Refunds are processed through Paystack.</p>
             </section>
 
             <section>

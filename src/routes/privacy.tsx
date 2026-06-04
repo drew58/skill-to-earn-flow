@@ -60,7 +60,7 @@ function PrivacyPage() {
               <h2 className="text-lg font-semibold text-white">4. Data Sharing</h2>
               <p className="mt-2">We do not sell your personal data. We share data only with:</p>
               <ul className="mt-2 list-disc space-y-1 pl-5">
-                <li><strong>Paddle</strong> — for payment processing and subscription management</li>
+                <li><strong>Paystack</strong> — for payment processing and subscription management</li>
                 <li><strong>AI providers</strong> — to generate content (your data is processed, not retained for training)</li>
                 <li><strong>Service providers</strong> — who help us operate the platform under strict confidentiality</li>
               </ul>
