@@ -7,7 +7,7 @@ import {
   Sparkles, Upload, FileText, Loader2, Copy, Check, ExternalLink, Wand2, Linkedin, Search, ChevronRight,
 } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
-import { Paywall } from "@/components/angie/Paywall";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useSubscription } from "@/hooks/use-subscription";
