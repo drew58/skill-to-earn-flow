@@ -392,6 +392,7 @@ function ProfilePage() {
           {saving || uploading ? "Saving…" : "Save profile"}
         </button>
       </div>
+      </>)}
     </div>
   );
 }
