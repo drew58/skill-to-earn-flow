@@ -209,6 +209,7 @@ export type Database = {
           id: string
           linkedin_url: string | null
           payment_methods: string[] | null
+          resume_file_url: string | null
           resume_path: string | null
           resume_text: string | null
           skills: string[] | null
@@ -225,6 +226,7 @@ export type Database = {
           id: string
           linkedin_url?: string | null
           payment_methods?: string[] | null
+          resume_file_url?: string | null
           resume_path?: string | null
           resume_text?: string | null
           skills?: string[] | null
@@ -241,6 +243,7 @@ export type Database = {
           id?: string
           linkedin_url?: string | null
           payment_methods?: string[] | null
+          resume_file_url?: string | null
           resume_path?: string | null
           resume_text?: string | null
           skills?: string[] | null
