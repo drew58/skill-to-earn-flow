@@ -40,6 +40,7 @@ function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [jobProfileMode, setJobProfileMode] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -48,7 +49,7 @@ function ProfilePage() {
         .select("display_name,country,experience_level,skills,goals,weekly_hours,payment_methods,linkedin_url,resume_text,resume_file_url")
         .eq("id", user.id).maybeSingle();
       if (data) {
-        setP({
+        const loaded: Profile = {
           display_name: data.display_name ?? "",
           country: data.country ?? "",
           experience_level: data.experience_level ?? "Beginner",
@@ -59,7 +60,14 @@ function ProfilePage() {
           linkedin_url: data.linkedin_url ?? "",
           resume_text: data.resume_text ?? "",
           resume_file_url: data.resume_file_url ?? "",
-        });
+        };
+        setP(loaded);
+        // Show job-profile preview by default when there's saved data; hide the form
+        const hasData = !!(loaded.display_name || loaded.country || loaded.skills.length || loaded.goals || loaded.resume_text || loaded.resume_file_url);
+        setJobProfileMode(hasData);
+        setEditing(!hasData);
+      } else {
+        setEditing(true);
       }
       setLoading(false);
     })();
