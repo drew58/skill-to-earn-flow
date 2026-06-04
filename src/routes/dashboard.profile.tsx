@@ -40,6 +40,7 @@ function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [jobProfileMode, setJobProfileMode] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -48,7 +49,7 @@ function ProfilePage() {
         .select("display_name,country,experience_level,skills,goals,weekly_hours,payment_methods,linkedin_url,resume_text,resume_file_url")
         .eq("id", user.id).maybeSingle();
       if (data) {
-        setP({
+        const loaded: Profile = {
           display_name: data.display_name ?? "",
           country: data.country ?? "",
           experience_level: data.experience_level ?? "Beginner",
@@ -59,7 +60,14 @@ function ProfilePage() {
           linkedin_url: data.linkedin_url ?? "",
           resume_text: data.resume_text ?? "",
           resume_file_url: data.resume_file_url ?? "",
-        });
+        };
+        setP(loaded);
+        // Show job-profile preview by default when there's saved data; hide the form
+        const hasData = !!(loaded.display_name || loaded.country || loaded.skills.length || loaded.goals || loaded.resume_text || loaded.resume_file_url);
+        setJobProfileMode(hasData);
+        setEditing(!hasData);
+      } else {
+        setEditing(true);
       }
       setLoading(false);
     })();
@@ -138,6 +146,7 @@ function ProfilePage() {
     else {
       toast.success("Profile saved", { description: "Angie will use this to tailor recommendations." });
       setJobProfileMode(true);
+      setEditing(false);
     }
   };
 
@@ -159,10 +168,18 @@ function ProfilePage() {
         </div>
       </motion.div>
 
-      {jobProfileMode && (p.display_name || p.country) && (
+      {jobProfileMode && (p.display_name || p.country || p.skills.length > 0) && (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           <GlassCard className="border-l-4 border-[#5B8CFF]">
-            <div className="text-xs uppercase tracking-wider text-[#5B8CFF] font-semibold">Job Profile Preview</div>
+            <div className="flex items-start justify-between gap-3">
+              <div className="text-xs uppercase tracking-wider text-[#5B8CFF] font-semibold">Job Profile</div>
+              <button
+                onClick={() => setEditing((e) => !e)}
+                className="rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] text-white/75 hover:text-white"
+              >
+                {editing ? "Hide form" : "Edit profile"}
+              </button>
+            </div>
             <div className="mt-4 space-y-3">
               <div>
                 <div className="text-xs text-white/50">Full Name</div>
@@ -182,29 +199,63 @@ function ProfilePage() {
                 <div>
                   <div className="text-xs text-white/50 mb-2">Skills</div>
                   <div className="flex flex-wrap gap-1.5">
-                    {p.skills.slice(0, 5).map((s) => (
+                    {p.skills.map((s) => (
                       <span key={s} className="inline-block rounded-full bg-[#5B8CFF]/20 px-2.5 py-1 text-xs text-[#A78BFA]">
                         {s}
                       </span>
                     ))}
-                    {p.skills.length > 5 && (
-                      <span className="inline-block rounded-full bg-white/5 px-2.5 py-1 text-xs text-white/50">
-                        +{p.skills.length - 5}
-                      </span>
-                    )}
                   </div>
                 </div>
               )}
-              {p.weekly_hours && (
+              {p.weekly_hours != null && (
                 <div>
                   <div className="text-xs text-white/50">Availability</div>
                   <div className="text-sm text-white">{p.weekly_hours} hours/week</div>
+                </div>
+              )}
+              {p.linkedin_url && (
+                <div>
+                  <div className="text-xs text-white/50">LinkedIn</div>
+                  <a href={p.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-sm text-[#A78BFA] hover:underline break-all">{p.linkedin_url}</a>
+                </div>
+              )}
+              {p.goals && (
+                <div>
+                  <div className="text-xs text-white/50">Goals</div>
+                  <p className="text-sm text-white whitespace-pre-line">{p.goals}</p>
+                </div>
+              )}
+              {p.resume_text && (
+                <div>
+                  <div className="text-xs text-white/50">Resume summary</div>
+                  <p className="text-sm text-white/85 whitespace-pre-line line-clamp-6">{p.resume_text}</p>
+                </div>
+              )}
+              {p.resume_file_url && (
+                <div>
+                  <div className="text-xs text-white/50">Resume file</div>
+                  <a href={p.resume_file_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-sm text-[#A78BFA] hover:underline">
+                    <FileText className="h-3.5 w-3.5" /> View uploaded file
+                  </a>
+                </div>
+              )}
+              {p.payment_methods.length > 0 && (
+                <div>
+                  <div className="text-xs text-white/50 mb-2">Payment methods</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {p.payment_methods.map((m) => (
+                      <span key={m} className="inline-block rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs text-white/70">{m}</span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
           </GlassCard>
         </motion.div>
       )}
+
+      {editing && (<>
+
 
       <GlassCard className="p-6">
         <h2 className="text-sm font-semibold">About you</h2>
@@ -341,6 +392,7 @@ function ProfilePage() {
           {saving || uploading ? "Saving…" : "Save profile"}
         </button>
       </div>
+      </>)}
     </div>
   );
 }

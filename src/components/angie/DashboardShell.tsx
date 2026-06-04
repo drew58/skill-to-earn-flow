@@ -119,7 +119,7 @@ export function DashboardShell({ children }: { children: ReactNode }) {
 
       {/* Mobile bottom nav */}
       <nav className="glass-strong fixed inset-x-3 bottom-3 z-40 flex justify-around rounded-2xl p-1.5 md:hidden">
-        {[NAV[0], NAV[1], NAV[3], NAV[4], NAV[5]].map((item) => {
+        {[NAV[0], NAV[2], NAV[4], NAV[5], NAV[8]].map((item) => {
           const active = item.to === "/dashboard" ? path === "/dashboard" : path.startsWith(item.to);
           return (
             <Link
