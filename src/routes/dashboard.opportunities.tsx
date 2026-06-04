@@ -195,6 +195,44 @@ function OpportunityExplorer() {
         </div>
       </motion.div>
 
+      {/* From your latest plan */}
+      {(planOpps.length > 0 || bestPick) && (
+        <section>
+          <SectionHeader
+            icon={Sparkles}
+            eyebrow="From your latest plan"
+            title={planTitle || "Pulled from your latest plan"}
+            subtitle="Personalized opportunities Angie identified for you."
+          />
+          {bestPick && (
+            <GlassCard className="mb-4 glow-purple">
+              <div className="text-[11px] font-medium uppercase tracking-wider text-[#A78BFA]">Best pick</div>
+              <h3 className="mt-1 text-lg font-semibold">{bestPick.name}</h3>
+              <p className="mt-1 text-sm text-white/70">{bestPick.rationale}</p>
+            </GlassCard>
+          )}
+          {planOpps.length > 0 && (
+            <div className="grid gap-3 md:grid-cols-3">
+              {planOpps.slice(0, 3).map((o, i) => (
+                <GlassCard key={i} hover>
+                  <div className="text-xs text-white/40">#{i + 1}</div>
+                  <div className="mt-1 font-semibold">{o.name}</div>
+                  <div className="mt-1 text-sm text-white/70">{o.why}</div>
+                  {o.effort && <div className="mt-3 text-xs text-[#5B8CFF]">Effort: {o.effort}</div>}
+                  <a
+                    href={`https://www.google.com/search?q=${encodeURIComponent(o.name + " freelance jobs")}`}
+                    target="_blank" rel="noopener noreferrer"
+                    className="mt-3 inline-flex items-center gap-1 text-xs text-[#A78BFA] hover:underline"
+                  >
+                    Search live listings <ExternalLink className="h-3 w-3" />
+                  </a>
+                </GlassCard>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
       {/* AI Recommendations */}
       <section>
         <SectionHeader
