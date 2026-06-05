@@ -29,6 +29,23 @@ export const initPaystackCheckout = createServerFn({ method: "POST" })
     const email = userRes.user?.email;
     if (!email) throw new Error("No email on account");
 
+    // Fetch the plan to get its amount + currency (Paystack requires `amount`
+    // on transaction/initialize and the currency must match the plan).
+    const planRes = await fetch(`https://api.paystack.co/plan/${plan}`, {
+      headers: { Authorization: `Bearer ${secret}` },
+    });
+    const planJson = (await planRes.json()) as {
+      status?: boolean;
+      message?: string;
+      data?: { amount?: number; currency?: string };
+    };
+    if (!planRes.ok || !planJson.status || !planJson.data?.amount) {
+      console.error("Paystack plan lookup failed:", planJson);
+      throw new Error(planJson.message || "Failed to load plan");
+    }
+    const amount = planJson.data.amount;
+    const currency = planJson.data.currency;
+
     const res = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
       headers: {
@@ -37,6 +54,8 @@ export const initPaystackCheckout = createServerFn({ method: "POST" })
       },
       body: JSON.stringify({
         email,
+        amount,
+        currency,
         plan,
         callback_url: data.callbackUrl,
         metadata: { user_id: userId, tier: data.tier },
@@ -50,7 +69,7 @@ export const initPaystackCheckout = createServerFn({ method: "POST" })
     };
 
     if (!res.ok || !json.status || !json.data?.authorization_url) {
-      console.error("Paystack init failed:", json);
+      console.error("Paystack init failed:", json, { amount, currency, plan });
       throw new Error(json.message || "Failed to start checkout");
     }
 
