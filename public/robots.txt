@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /api/
+
+Sitemap: https://skill-to-earn-flow.lovable.app/sitemap.xml

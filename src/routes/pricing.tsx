@@ -10,7 +10,39 @@ import { useAuth } from "@/lib/auth";
 import { initPaystackCheckout } from "@/lib/paystack.functions";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/pricing")({ component: PricingPage });
+const BILLING_FAQS = [
+  { q: "Can I cancel anytime?", a: "Yes. No contracts, no cancellation fees. Cancel from your dashboard in two clicks." },
+  { q: "What payment methods do you accept?", a: "All major credit/debit cards, bank transfer, USSD, and mobile money via Paystack — accepted worldwide." },
+  { q: "Is there a money-back guarantee?", a: "Yes — 7-day full refund, no questions asked." },
+  { q: "What happens to my data if I downgrade?", a: "Your plans and history stay. Free tier limits apply going forward." },
+  { q: "Is Paystack secure?", a: "Paystack is PCI-DSS Level 1 certified. Your payment info never touches our servers." },
+];
+
+export const Route = createFileRoute("/pricing")({
+  component: PricingPage,
+  head: () => ({
+    meta: [
+      { title: "Pricing — Angie" },
+      { name: "description", content: "Simple, transparent pricing for Angie. Start free, upgrade to Pro or Accelerator to unlock more income plans, missions, and outreach scripts." },
+      { property: "og:title", content: "Pricing — Angie" },
+      { property: "og:description", content: "Start free. Upgrade when you're ready. Cancel anytime." },
+      { property: "og:url", content: "https://skill-to-earn-flow.lovable.app/pricing" },
+    ],
+    links: [{ rel: "canonical", href: "https://skill-to-earn-flow.lovable.app/pricing" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: BILLING_FAQS.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }),
+    }],
+  }),
+});
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
@@ -188,13 +220,7 @@ function PricingPage() {
             Billing questions
           </motion.h2>
           <div className="mt-10 space-y-3">
-            {[
-              { q: "Can I cancel anytime?", a: "Yes. No contracts, no cancellation fees. Cancel from your dashboard in two clicks." },
-              { q: "What payment methods do you accept?", a: "All major credit/debit cards, bank transfer, USSD, and mobile money via Paystack — accepted worldwide." },
-              { q: "Is there a money-back guarantee?", a: "Yes — 7-day full refund, no questions asked." },
-              { q: "What happens to my data if I downgrade?", a: "Your plans and history stay. Free tier limits apply going forward." },
-              { q: "Is Paystack secure?", a: "Paystack is PCI-DSS Level 1 certified. Your payment info never touches our servers." },
-            ].map((f) => (
+            {BILLING_FAQS.map((f) => (
               <GlassCard key={f.q} className="p-5">
                 <div className="font-medium">{f.q}</div>
                 <div className="mt-1.5 text-sm text-white/60">{f.a}</div>
