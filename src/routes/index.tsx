@@ -355,12 +355,8 @@ function Pricing() {
   );
 }
 
-const FAQS = [
-  { q: "Is Angie just another AI chatbot?", a: "No. Angie is structured around execution — every plan ends with a 24-hour action and daily missions. It's a coach, not a chat window." },
-  { q: "Will it work for my country?", a: "Yes. Plans are tailored to your country, time zone, and the platforms actually available to you." },
-  { q: "Do I need experience?", a: "No. You pick your level (beginner, intermediate, advanced) and Angie scales the plan accordingly." },
-  { q: "Can I cancel anytime?", a: "Yes. No contracts. Cancel from settings in two clicks." },
-];
+
+
 
 function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
