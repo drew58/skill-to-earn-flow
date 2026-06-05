@@ -10,7 +10,40 @@ import { GlowButton } from "@/components/angie/GlowButton";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { GlowOrbs } from "@/components/angie/GlowOrbs";
 
-export const Route = createFileRoute("/")({ component: Landing });
+const FAQS = [
+  { q: "Is Angie just another AI chatbot?", a: "No. Angie is structured around execution — every plan ends with a 24-hour action and daily missions. It's a coach, not a chat window." },
+  { q: "Will it work for my country?", a: "Yes. Plans are tailored to your country, time zone, and the platforms actually available to you." },
+  { q: "Do I need experience?", a: "No. You pick your level (beginner, intermediate, advanced) and Angie scales the plan accordingly." },
+  { q: "Can I cancel anytime?", a: "Yes. No contracts. Cancel from settings in two clicks." },
+];
+
+export const Route = createFileRoute("/")({
+  component: Landing,
+  head: () => ({
+    meta: [
+      { title: "Angie — Turn Your Skills Into Income With AI" },
+      { name: "description", content: "Angie builds realistic income plans, daily missions, outreach scripts, and execution strategies based on your skills and goals." },
+      { property: "og:title", content: "Angie — Turn Your Skills Into Income With AI" },
+      { property: "og:description", content: "Stop guessing. Start earning. AI-generated income plans, daily missions, and outreach scripts." },
+      { property: "og:url", content: "https://skill-to-earn-flow.lovable.app/" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65e91299-1dcb-4bbf-8c95-984c13b968e9/id-preview-c8ce2705--b0331167-5a9d-4b90-940a-93c3de4767a8.lovable.app-1780316957477.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/65e91299-1dcb-4bbf-8c95-984c13b968e9/id-preview-c8ce2705--b0331167-5a9d-4b90-940a-93c3de4767a8.lovable.app-1780316957477.png" },
+    ],
+    links: [{ rel: "canonical", href: "https://skill-to-earn-flow.lovable.app/" }],
+    scripts: [{
+      type: "application/ld+json",
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: FAQS.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      }),
+    }],
+  }),
+});
 
 const fadeUp = {
   initial: { opacity: 0, y: 20 },
