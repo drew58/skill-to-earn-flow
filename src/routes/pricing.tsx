@@ -220,13 +220,7 @@ function PricingPage() {
             Billing questions
           </motion.h2>
           <div className="mt-10 space-y-3">
-            {[
-              { q: "Can I cancel anytime?", a: "Yes. No contracts, no cancellation fees. Cancel from your dashboard in two clicks." },
-              { q: "What payment methods do you accept?", a: "All major credit/debit cards, bank transfer, USSD, and mobile money via Paystack — accepted worldwide." },
-              { q: "Is there a money-back guarantee?", a: "Yes — 7-day full refund, no questions asked." },
-              { q: "What happens to my data if I downgrade?", a: "Your plans and history stay. Free tier limits apply going forward." },
-              { q: "Is Paystack secure?", a: "Paystack is PCI-DSS Level 1 certified. Your payment info never touches our servers." },
-            ].map((f) => (
+            {BILLING_FAQS.map((f) => (
               <GlassCard key={f.q} className="p-5">
                 <div className="font-medium">{f.q}</div>
                 <div className="mt-1.5 text-sm text-white/60">{f.a}</div>
