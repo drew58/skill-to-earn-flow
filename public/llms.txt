@@ -1,0 +1,11 @@
+# Angie
+
+> Angie is an AI income strategist that turns your skills into income through personalized plans, daily missions, outreach scripts, and execution strategies.
+
+## Pages
+
+- [Home](/): Overview of Angie's AI-powered income execution platform.
+- [Pricing](/pricing): Free, Pro, and Accelerator plans with Paystack billing.
+- [Terms](/terms): Terms of service.
+- [Privacy](/privacy): Privacy policy.
+- [Refund](/refund): Refund policy.
