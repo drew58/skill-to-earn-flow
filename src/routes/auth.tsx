@@ -10,7 +10,20 @@ import { GlowButton } from "@/components/angie/GlowButton";
 import { GlowOrbs } from "@/components/angie/GlowOrbs";
 import { ArrowLeft, Mail, Lock } from "lucide-react";
 
-export const Route = createFileRoute("/auth")({ component: AuthPage });
+export const Route = createFileRoute("/auth")({
+  component: AuthPage,
+  head: () => ({
+    meta: [
+      { title: "Sign In — Angie" },
+      { name: "description", content: "Sign in or create your Angie account to generate personalized income plans, daily missions, and outreach scripts." },
+      { property: "og:title", content: "Sign In — Angie" },
+      { property: "og:description", content: "Access your AI income strategist. Sign in or create a free Angie account." },
+      { property: "og:url", content: "https://skill-to-earn-flow.lovable.app/auth" },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [{ rel: "canonical", href: "https://skill-to-earn-flow.lovable.app/auth" }],
+  }),
+});
 
 type Mode = "login" | "signup" | "reset";
 
