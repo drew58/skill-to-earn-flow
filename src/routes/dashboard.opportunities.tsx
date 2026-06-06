@@ -100,6 +100,29 @@ function OpportunityExplorer() {
       });
   }, [user]);
 
+  // Debounced query for live jobs API
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query.trim()), 350);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // Default seed for live jobs: best pick or top opportunity name
+  const liveSeed = useMemo(() => {
+    if (debouncedQuery) return debouncedQuery;
+    if (bestPick?.name) return bestPick.name.split(/[—\-:,]/)[0].trim().slice(0, 40);
+    if (planOpps[0]?.name) return planOpps[0].name.split(/[—\-:,]/)[0].trim().slice(0, 40);
+    return "";
+  }, [debouncedQuery, bestPick, planOpps]);
+
+  const fetchJobs = useServerFn(fetchLiveJobs);
+  const liveJobs = useQuery({
+    queryKey: ["live-jobs", liveSeed],
+    queryFn: () => fetchJobs({ data: { query: liveSeed, limit: 24 } }),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+
   const filtered = useMemo(() => {
     return OPPORTUNITIES.filter((o) => {
       if (activeCat !== "All" && o.category !== activeCat) return false;
