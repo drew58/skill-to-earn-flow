@@ -526,3 +526,49 @@ function OpportunityCard({
     </GlassCard>
   );
 }
+
+function LiveJobCard({ job }: { job: LiveJob }) {
+  return (
+    <GlassCard hover className="flex h-full flex-col p-5">
+      <div className="flex items-start gap-3">
+        {job.logo ? (
+          <img src={job.logo} alt={job.company} loading="lazy" className="h-10 w-10 rounded-lg bg-white/5 object-contain ring-1 ring-white/10" />
+        ) : (
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[#5B8CFF]/30 to-[#8B5CF6]/30 ring-1 ring-white/10">
+            <Building className="h-4 w-4 text-white/70" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-white/45">
+            <span className="rounded-full bg-[#22C55E]/15 px-1.5 py-0.5 text-[#86EFAC]">{job.source}</span>
+            {job.postedAt && <span>{new Date(job.postedAt).toLocaleDateString()}</span>}
+          </div>
+          <div className="mt-0.5 truncate text-sm font-semibold text-white/90">{job.title}</div>
+          <div className="truncate text-xs text-white/55">{job.company}</div>
+        </div>
+      </div>
+      <div className="mt-3 flex items-center gap-3 text-[11px] text-white/50">
+        <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.location}</span>
+        {job.salary && <span className="text-[#93B4FF]">{job.salary}</span>}
+      </div>
+      {job.tags.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {job.tags.slice(0, 4).map((t) => (
+            <span key={t} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[10px] text-white/55">{t}</span>
+          ))}
+        </div>
+      )}
+      <div className="mt-auto flex justify-end pt-4">
+        <a
+          href={job.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] px-3.5 py-1.5 text-[11px] font-medium text-white shadow-[0_8px_30px_-8px_rgba(91,140,255,0.6)] transition-all hover:-translate-y-0.5"
+        >
+          Apply <ExternalLink className="h-3 w-3" />
+        </a>
+      </div>
+    </GlassCard>
+  );
+}
+
