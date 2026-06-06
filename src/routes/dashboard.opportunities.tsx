@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Search, Sparkles, Bookmark, BookmarkCheck, ExternalLink, Filter, Lock,
   Briefcase, Code2, PenTool, Megaphone, GraduationCap, Camera, Headphones,
-  TrendingUp, Zap, Globe2, Building2, ShoppingBag, Wand2,
+  TrendingUp, Zap, Globe2, Building2, ShoppingBag, Wand2, Radio, MapPin, Building,
 } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,10 +14,12 @@ import { useAuth } from "@/lib/auth";
 import { useSubscription } from "@/hooks/use-subscription";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { fetchLiveJobs, type LiveJob } from "@/lib/jobs.functions";
 
 export const Route = createFileRoute("/dashboard/opportunities")({
   component: OpportunityExplorer,
 });
+
 
 type Level = "Beginner" | "Intermediate" | "Pro";
 type Category = "Freelance" | "Remote Job" | "Marketplace" | "Creator" | "Microtask" | "Coaching";
@@ -95,6 +99,29 @@ function OpportunityExplorer() {
         setPlanTitle(data.title ?? "");
       });
   }, [user]);
+
+  // Debounced query for live jobs API
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query.trim()), 350);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // Default seed for live jobs: best pick or top opportunity name
+  const liveSeed = useMemo(() => {
+    if (debouncedQuery) return debouncedQuery;
+    if (bestPick?.name) return bestPick.name.split(/[—\-:,]/)[0].trim().slice(0, 40);
+    if (planOpps[0]?.name) return planOpps[0].name.split(/[—\-:,]/)[0].trim().slice(0, 40);
+    return "";
+  }, [debouncedQuery, bestPick, planOpps]);
+
+  const fetchJobs = useServerFn(fetchLiveJobs);
+  const liveJobs = useQuery({
+    queryKey: ["live-jobs", liveSeed],
+    queryFn: () => fetchJobs({ data: { query: liveSeed, limit: 24 } }),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
 
   const filtered = useMemo(() => {
     return OPPORTUNITIES.filter((o) => {
@@ -232,6 +259,40 @@ function OpportunityExplorer() {
           )}
         </section>
       )}
+
+      {/* Live Jobs (real-time from RemoteOK + Remotive) */}
+      <section>
+        <SectionHeader
+          icon={Radio}
+          eyebrow={liveSeed ? `Live · "${liveSeed}"` : "Live"}
+          title="Real-time job feed"
+          subtitle="Fresh remote roles from RemoteOK and Remotive. Search above to filter."
+        />
+        {liveJobs.isLoading ? (
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <GlassCard key={i} className="h-36 animate-pulse opacity-50" />
+            ))}
+          </div>
+        ) : liveJobs.data && liveJobs.data.jobs.length > 0 ? (
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {liveJobs.data.jobs.map((j) => (
+              <LiveJobCard key={j.id} job={j} />
+            ))}
+          </div>
+        ) : (
+          <GlassCard className="py-10 text-center text-sm text-white/50">
+            No live jobs found for that search. Try a different keyword.
+          </GlassCard>
+        )}
+        {liveJobs.data?.fetchedAt && (
+          <div className="mt-3 text-right text-[10px] uppercase tracking-wider text-white/30">
+            Updated {new Date(liveJobs.data.fetchedAt).toLocaleTimeString()}
+          </div>
+        )}
+      </section>
+
+
 
       {/* AI Recommendations */}
       <section>
@@ -465,3 +526,49 @@ function OpportunityCard({
     </GlassCard>
   );
 }
+
+function LiveJobCard({ job }: { job: LiveJob }) {
+  return (
+    <GlassCard hover className="flex h-full flex-col p-5">
+      <div className="flex items-start gap-3">
+        {job.logo ? (
+          <img src={job.logo} alt={job.company} loading="lazy" className="h-10 w-10 rounded-lg bg-white/5 object-contain ring-1 ring-white/10" />
+        ) : (
+          <div className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[#5B8CFF]/30 to-[#8B5CF6]/30 ring-1 ring-white/10">
+            <Building className="h-4 w-4 text-white/70" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 text-[10px] uppercase tracking-wider text-white/45">
+            <span className="rounded-full bg-[#22C55E]/15 px-1.5 py-0.5 text-[#86EFAC]">{job.source}</span>
+            {job.postedAt && <span>{new Date(job.postedAt).toLocaleDateString()}</span>}
+          </div>
+          <div className="mt-0.5 truncate text-sm font-semibold text-white/90">{job.title}</div>
+          <div className="truncate text-xs text-white/55">{job.company}</div>
+        </div>
+      </div>
+      <div className="mt-3 flex items-center gap-3 text-[11px] text-white/50">
+        <span className="inline-flex items-center gap-1"><MapPin className="h-3 w-3" /> {job.location}</span>
+        {job.salary && <span className="text-[#93B4FF]">{job.salary}</span>}
+      </div>
+      {job.tags.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {job.tags.slice(0, 4).map((t) => (
+            <span key={t} className="rounded-full border border-white/10 bg-white/[0.03] px-2 py-0.5 text-[10px] text-white/55">{t}</span>
+          ))}
+        </div>
+      )}
+      <div className="mt-auto flex justify-end pt-4">
+        <a
+          href={job.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#5B8CFF] to-[#8B5CF6] px-3.5 py-1.5 text-[11px] font-medium text-white shadow-[0_8px_30px_-8px_rgba(91,140,255,0.6)] transition-all hover:-translate-y-0.5"
+        >
+          Apply <ExternalLink className="h-3 w-3" />
+        </a>
+      </div>
+    </GlassCard>
+  );
+}
+

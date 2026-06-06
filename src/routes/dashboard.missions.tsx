@@ -39,7 +39,36 @@ function MissionsPage() {
   };
 
   useEffect(() => {
-    if (user) load();
+    if (!user) return;
+    load();
+    const channel = supabase
+      .channel(`missions:${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "missions", filter: `user_id=eq.${user.id}` },
+        (payload) => {
+          setMissions((prev) => {
+            if (payload.eventType === "INSERT") {
+              const row = payload.new as Mission;
+              if (prev.some((m) => m.id === row.id)) return prev;
+              return [row, ...prev];
+            }
+            if (payload.eventType === "UPDATE") {
+              const row = payload.new as Mission;
+              return prev.map((m) => (m.id === row.id ? { ...m, ...row } : m));
+            }
+            if (payload.eventType === "DELETE") {
+              const row = payload.old as Mission;
+              return prev.filter((m) => m.id !== row.id);
+            }
+            return prev;
+          });
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   const toggle = async (id: string, completed: boolean) => {
