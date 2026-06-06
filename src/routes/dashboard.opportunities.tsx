@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Search, Sparkles, Bookmark, BookmarkCheck, ExternalLink, Filter, Lock,
   Briefcase, Code2, PenTool, Megaphone, GraduationCap, Camera, Headphones,
-  TrendingUp, Zap, Globe2, Building2, ShoppingBag, Wand2,
+  TrendingUp, Zap, Globe2, Building2, ShoppingBag, Wand2, Radio, MapPin, Building,
 } from "lucide-react";
 import { GlassCard } from "@/components/angie/GlassCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,10 +14,12 @@ import { useAuth } from "@/lib/auth";
 import { useSubscription } from "@/hooks/use-subscription";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { fetchLiveJobs, type LiveJob } from "@/lib/jobs.functions";
 
 export const Route = createFileRoute("/dashboard/opportunities")({
   component: OpportunityExplorer,
 });
+
 
 type Level = "Beginner" | "Intermediate" | "Pro";
 type Category = "Freelance" | "Remote Job" | "Marketplace" | "Creator" | "Microtask" | "Coaching";
