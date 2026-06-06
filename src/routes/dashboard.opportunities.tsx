@@ -260,6 +260,40 @@ function OpportunityExplorer() {
         </section>
       )}
 
+      {/* Live Jobs (real-time from RemoteOK + Remotive) */}
+      <section>
+        <SectionHeader
+          icon={Radio}
+          eyebrow={liveSeed ? `Live · "${liveSeed}"` : "Live"}
+          title="Real-time job feed"
+          subtitle="Fresh remote roles from RemoteOK and Remotive. Search above to filter."
+        />
+        {liveJobs.isLoading ? (
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <GlassCard key={i} className="h-36 animate-pulse opacity-50" />
+            ))}
+          </div>
+        ) : liveJobs.data && liveJobs.data.jobs.length > 0 ? (
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {liveJobs.data.jobs.map((j) => (
+              <LiveJobCard key={j.id} job={j} />
+            ))}
+          </div>
+        ) : (
+          <GlassCard className="py-10 text-center text-sm text-white/50">
+            No live jobs found for that search. Try a different keyword.
+          </GlassCard>
+        )}
+        {liveJobs.data?.fetchedAt && (
+          <div className="mt-3 text-right text-[10px] uppercase tracking-wider text-white/30">
+            Updated {new Date(liveJobs.data.fetchedAt).toLocaleTimeString()}
+          </div>
+        )}
+      </section>
+
+
+
       {/* AI Recommendations */}
       <section>
         <SectionHeader
